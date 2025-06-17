@@ -1,0 +1,18 @@
+<div *ngIf="visible" [class]="alertClasses">
+  <div class="flex">
+    <div class="flex-shrink-0">
+      <span class="material-icons" [class]="iconClasses">{{ icon }}</span>
+    </div>
+    <div class="ml-3 flex-1">
+      <p [class]="textClasses">{{ message }}</p>
+    </div>
+    <div *ngIf="dismissible" class="pl-3">
+      <div class="-mx-1.5 -my-1.5">
+        <button type="button" (click)="dismiss()" class="inline-flex rounded-md p-1.5" [class]="textClasses">
+          <span class="sr-only">Dismiss</span>
+          <span class="material-icons text-sm">close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

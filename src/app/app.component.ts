@@ -1,12 +1,17 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component,  OnInit } from "@angular/core"
+import { RouterOutlet } from "@angular/router"
+import  { Store } from "@ngxs/store"
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
+  standalone: true,
   imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  template: "<router-outlet></router-outlet>",
 })
-export class AppComponent {
-  title = 'prueba';
+export class AppComponent implements OnInit {
+  constructor(private store: Store) {}
+
+  ngOnInit() {
+
+  }
 }

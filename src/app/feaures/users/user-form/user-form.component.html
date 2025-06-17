@@ -1,0 +1,205 @@
+<div class="container mx-auto px-4 py-6">
+  <div class="flex items-center mb-6">
+    <a routerLink="/users" class="text-indigo-600 hover:text-indigo-900 mr-2">
+      <span class="material-icons text-sm">arrow_back</span>
+    </a>
+    <h1 class="text-2xl font-bold text-gray-900">{{ isEditMode ? 'Edit' : 'New' }} User</h1>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="p-6">
+      <div class="space-y-6">
+        <!-- Basic Information -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900">Basic Information</h3>
+          <div class="mt-4 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+            <div class="sm:col-span-3">
+              <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+              <input 
+                type="text" 
+                id="firstName" 
+                formControlName="firstName" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched" class="text-red-500 text-xs mt-1">
+                First name is required
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+              <input 
+                type="text" 
+                id="lastName" 
+                formControlName="lastName" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched" class="text-red-500 text-xs mt-1">
+                Last name is required
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="userForm.get('email')?.errors?.['required']">Email is required</span>
+                <span *ngIf="userForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+              <input 
+                type="text" 
+                id="username" 
+                formControlName="username" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched" class="text-red-500 text-xs mt-1">
+                Username is required
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+              <select 
+                id="role" 
+                formControlName="role" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+                <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+              </select>
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                formControlName="phone" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Password (only for new users) -->
+        <div *ngIf="!isEditMode">
+          <h3 class="text-lg font-medium text-gray-900">Password</h3>
+          <div class="mt-4 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+            <div class="sm:col-span-3">
+              <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+              <input 
+                type="password" 
+                id="password" 
+                formControlName="password" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="userForm.get('password')?.errors?.['required']">Password is required</span>
+                <span *ngIf="userForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <input 
+                type="password" 
+                id="confirmPassword" 
+                formControlName="confirmPassword" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="userForm.get('confirmPassword')?.invalid && userForm.get('confirmPassword')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="userForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
+                <span *ngIf="userForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div formGroupName="address">
+          <h3 class="text-lg font-medium text-gray-900">Address</h3>
+          <div class="mt-4 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+            <div class="sm:col-span-6">
+              <label for="street" class="block text-sm font-medium text-gray-700">Street Address</label>
+              <input 
+                type="text" 
+                id="street" 
+                formControlName="street" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+              <input 
+                type="text" 
+                id="city" 
+                formControlName="city" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="state" class="block text-sm font-medium text-gray-700">State / Province</label>
+              <input 
+                type="text" 
+                id="state" 
+                formControlName="state" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="zipCode" class="block text-sm font-medium text-gray-700">ZIP / Postal Code</label>
+              <input 
+                type="text" 
+                id="zipCode" 
+                formControlName="zipCode" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+              <input 
+                type="text" 
+                id="country" 
+                formControlName="country" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+          <button 
+            type="button" 
+            routerLink="/users" 
+            class="mr-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            [disabled]="userForm.invalid || (loading$ | async)"
+            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300"
+          >
+            <span *ngIf="loading$ | async" class="mr-2">
+              <div class="animate-spin h-4 w-4 border-t-2 border-b-2 border-white rounded-full"></div>
+            </span>
+            {{ isEditMode ? 'Update' : 'Create' }} User
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

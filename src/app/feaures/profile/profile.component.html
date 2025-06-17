@@ -1,0 +1,184 @@
+<div class="container mx-auto px-4 py-6">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Profile Settings</h1>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <!-- Profile Information -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Profile Information</h2>
+      </div>
+      <div class="p-6">
+        <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+          <div class="space-y-6">
+            <div *ngIf="user$ | async as user" class="flex items-center">
+              <img [src]="user.image || 'assets/images/default-avatar.png'" alt="User avatar" class="h-16 w-16 rounded-full object-cover">
+              <div class="ml-4">
+                <button type="button" class="text-sm text-indigo-600 hover:text-indigo-900">
+                  Change avatar
+                </button>
+                <p class="text-xs text-gray-500 mt-1">JPG, PNG or GIF. 1MB max.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                <input 
+                  type="text" 
+                  id="firstName" 
+                  formControlName="firstName" 
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                >
+                <div *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched" class="text-red-500 text-xs mt-1">
+                  First name is required
+                </div>
+              </div>
+
+              <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                <input 
+                  type="text" 
+                  id="lastName" 
+                  formControlName="lastName" 
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                >
+                <div *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched" class="text-red-500 text-xs mt-1">
+                  Last name is required
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="profileForm.get('email')?.errors?.['required']">Email is required</span>
+                <span *ngIf="profileForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+              </div>
+            </div>
+
+            <div>
+              <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+              <input 
+                type="text" 
+                id="username" 
+                formControlName="username" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched" class="text-red-500 text-xs mt-1">
+                Username is required
+              </div>
+            </div>
+
+            <div *ngIf="profileUpdateSuccess" class="bg-green-50 border-l-4 border-green-400 p-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <span class="material-icons text-green-400">check_circle</span>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-green-700">
+                    Profile updated successfully
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button 
+                type="submit" 
+                [disabled]="profileForm.invalid || (loading$ | async)"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300"
+              >
+                <span *ngIf="loading$ | async" class="mr-2">
+                  <div class="animate-spin h-4 w-4 border-t-2 border-b-2 border-white rounded-full"></div>
+                </span>
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Change Password</h2>
+      </div>
+      <div class="p-6">
+        <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+          <div class="space-y-6">
+            <div>
+              <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current Password</label>
+              <input 
+                type="password" 
+                id="currentPassword" 
+                formControlName="currentPassword" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" class="text-red-500 text-xs mt-1">
+                Current password is required
+              </div>
+            </div>
+
+            <div>
+              <label for="newPassword" class="block text-sm font-medium text-gray-700">New Password</label>
+              <input 
+                type="password" 
+                id="newPassword" 
+                formControlName="newPassword" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']">New password is required</span>
+                <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">Password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <div>
+              <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+              <input 
+                type="password" 
+                id="confirmPassword" 
+                formControlName="confirmPassword" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+              <div *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
+                <span *ngIf="passwordForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match</span>
+              </div>
+            </div>
+
+            <div *ngIf="passwordUpdateSuccess" class="bg-green-50 border-l-4 border-green-400 p-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <span class="material-icons text-green-400">check_circle</span>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-green-700">
+                    Password updated successfully
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button 
+                type="submit" 
+                [disabled]="passwordForm.invalid"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300"
+              >
+                Update Password
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

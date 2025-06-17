@@ -1,0 +1,54 @@
+<div class="space-y-4">
+  <div
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    [class.border-indigo-500]="dragOver"
+    [class.bg-indigo-50]="dragOver"
+    class="flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 py-10 transition-colors"
+  >
+    <div class="text-center">
+      <span class="material-icons text-gray-400 text-3xl">cloud_upload</span>
+      <div class="mt-2 flex text-sm text-gray-600">
+        <label
+          for="file-upload"
+          class="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+        >
+          <span>Upload a file</span>
+          <input
+            id="file-upload"
+            name="file-upload"
+            type="file"
+            class="sr-only"
+            [accept]="accept"
+            [multiple]="multiple"
+            (change)="onFileSelected($event)"
+          />
+        </label>
+        <p class="pl-1">or drag and drop</p>
+      </div>
+      <p class="text-xs text-gray-500">
+        {{ multiple ? 'Files' : 'File' }} up to {{ formatSize(maxSize) }}
+      </p>
+    </div>
+  </div>
+  
+  <div *ngIf="error" class="text-red-500 text-sm">
+    {{ error }}
+  </div>
+  
+  <div *ngIf="files.length > 0" class="space-y-2">
+    <div *ngFor="let file of files; let i = index" class="flex items-center justify-between rounded-md border border-gray-200 p-2">
+      <div class="flex items-center">
+        <span class="material-icons text-gray-400 mr-2">description</span>
+        <div>
+          <p class="text-sm font-medium text-gray-900">{{ file.name }}</p>
+          <p class="text-xs text-gray-500">{{ formatSize(file.size) }}</p>
+        </div>
+      </div>
+      <button (click)="removeFile(i)" class="text-gray-400 hover:text-gray-500">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+  </div>
+</div>
