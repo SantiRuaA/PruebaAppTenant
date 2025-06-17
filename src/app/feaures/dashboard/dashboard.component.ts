@@ -20,7 +20,7 @@ import { LoadDocuments } from '../../state/document/document.actions';
   imports: [CommonModule, LoadingSpinnerComponent, RouterLink],
   templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
   user$: Observable<User | null>;
   currentTenant$: Observable<Tenant | null>;
   documentPagination$: Observable<DocumentStateModel['pagination']>;
@@ -37,11 +37,11 @@ export class DashboardComponent implements OnInit{
     this.tenants$ = this.store.select(TenantState.tenants);
 
     // Un solo 'loading' que es true si CUALQUIERA de los estados está cargando
-    this.isLoading$ = this.store.select(state => 
+    this.isLoading$ = this.store.select(state =>
       state.auth.loading || state.user.loading || state.tenant.loading || state.document.loading
     );
-    
-    // 3. Derivamos isAdmin$ del user$ que acabamos de inicializar
+
+    //Derivamos isAdmin$ del user$ que acabamos de inicializar
     this.isAdmin$ = this.user$.pipe(
       map(user => user?.roles.includes('admin') ?? false)
     );

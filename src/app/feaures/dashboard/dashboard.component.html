@@ -1,56 +1,58 @@
 <div class="container mx-auto p-4">
   <div class="bg-white rounded-lg shadow-md p-6">
     <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
-    
+
     <div *ngIf="isLoading$ | async" class="flex justify-center">
       <app-loading-spinner></app-loading-spinner>
     </div>
-    
+
     <div *ngIf="!(isLoading$ | async)">
       <div class="mb-6">
         <h2 *ngIf="user$ | async as user" class="text-xl font-semibold mb-2">
-          Welcome, {{ user.firstName }}
+          Bienvenido/a, {{ user.firstName }}
         </h2>
         <p *ngIf="currentTenant$ | async as tenant" class="text-gray-600">
-          Current tenant: {{ tenant.name }}
+          Tenant actual: {{ tenant.name }}
         </p>
       </div>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <h3 class="font-medium text-blue-700">Documents</h3>
+          <h3 class="font-medium text-blue-700">Documentos</h3>
           <p class="text-2xl font-bold">{{ (documentPagination$ | async)?.total || 0 }}</p>
         </div>
-        
+
         <div *ngIf="isAdmin$ | async" class="bg-green-50 p-4 rounded-lg border border-green-200">
-          <h3 class="font-medium text-green-700">Users</h3>
+          <h3 class="font-medium text-green-700">Usuarios</h3>
           <p class="text-2xl font-bold">{{ (userPagination$ | async)?.total || 0 }}</p>
         </div>
-        
+
         <div *ngIf="isAdmin$ | async" class="bg-purple-50 p-4 rounded-lg border border-purple-200">
           <h3 class="font-medium text-purple-700">Tenants</h3>
           <p class="text-2xl font-bold">{{ (tenants$ | async)?.length || 0 }}</p>
         </div>
       </div>
-      
+
       <div class="mb-6">
-        <h2 class="text-lg font-semibold mb-2">Recent Activity</h2>
+        <h2 class="text-lg font-semibold mb-2">Actividad Reciente</h2>
         <div class="bg-gray-50 p-4 rounded-lg">
-          <p class="text-gray-500">No recent activity to display.</p>
+          <p class="text-gray-500">No hay actividades para mostrar.</p>
         </div>
       </div>
-      
+
       <div>
-        <h2 class="text-lg font-semibold mb-2">Quick Actions</h2>
+        <h2 class="text-lg font-semibold mb-2">Acciones rapidas</h2>
         <div class="flex flex-wrap gap-2">
           <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" routerLink="/documents">
-            Create Document
+            Crear Documento
           </button>
-          <button *ngIf="isAdmin$ | async" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300" routerLink="/users">
-            View Users
+          <button *ngIf="isAdmin$ | async" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+            routerLink="/users">
+            Crear Usuarios
           </button>
-          <button *ngIf="isAdmin$ | async" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300" routerLink="/tenants">
-            Manage Tenants
+          <button *ngIf="isAdmin$ | async" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+            routerLink="/tenants">
+            Crear tenants
           </button>
         </div>
       </div>

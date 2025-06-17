@@ -1,19 +1,19 @@
-import { Component,  OnInit } from "@angular/core"
-import {  FormBuilder,  FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
-import  { ActivatedRoute, Router, RouterLink } from "@angular/router"
-import  { Store } from "@ngxs/store"
-import  { Observable } from "rxjs"
+import { Component, OnInit } from "@angular/core"
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
+import { ActivatedRoute, Router, RouterLink } from "@angular/router"
+import { Store } from "@ngxs/store"
+import { Observable } from "rxjs"
 import { CommonModule } from "@angular/common"
 import { LoadDocument, CreateDocument, UpdateDocument } from "../../../state/document/document.actions"
 import { DocumentState } from "../../../state/document/document.state"
 import { AuthState } from "../../../state/auth/auth.state"
 import { TenantState } from "../../../state/tenant/tenant.state"
-import  { DocumentService } from "../../../core/services/document.service"
+import { DocumentService } from "../../../core/services/document.service"
 
 @Component({
   selector: "app-document-form",
   standalone: true,
-  imports: [ RouterLink, CommonModule, ReactiveFormsModule ],
+  imports: [RouterLink, CommonModule, ReactiveFormsModule],
   templateUrl: "./document-form.component.html",
 })
 export class DocumentFormComponent implements OnInit {
@@ -40,7 +40,7 @@ export class DocumentFormComponent implements OnInit {
   ngOnInit(): void {
     this.initForm()
 
-    // Check if we're in edit mode
+    // Verificar si esta en modo de edicion
     const id = this.route.snapshot.paramMap.get("id")
     if (id) {
       this.isEditMode = true
@@ -91,14 +91,14 @@ export class DocumentFormComponent implements OnInit {
     const formData = this.documentForm.value
 
     if (this.isEditMode && this.documentId) {
-      // Update existing document
+      // Actualizar documento existente
       this.store
         .dispatch(
           new UpdateDocument(this.documentId, currentTenant.id, {
             name: formData.name,
             description: formData.description,
             tags: this.tags,
-            // Only update fileUrl if a new file was uploaded
+            // Solo actualizar si en fileUrl subiron nuevo archivo
             ...(this.uploadedFileUrl && { fileUrl: this.uploadedFileUrl }),
           }),
         )
@@ -108,9 +108,9 @@ export class DocumentFormComponent implements OnInit {
           },
         })
     } else {
-      // Create new document
+      // Crear nuevo documento
       if (!this.uploadedFileUrl) {
-        // Can't create a document without a file
+        // No se puede crear documento sin archivo
         return
       }
 

@@ -1,12 +1,13 @@
-import { Component,  OnInit } from "@angular/core"
-import {  FormBuilder,  FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
+import { Component, OnInit } from "@angular/core"
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
 import { CommonModule } from "@angular/common"
-import  { AuthService } from "../../../core/services/auth.service"
+import { AuthService } from "../../../core/services/auth.service"
+import { RouterLink } from "@angular/router"
 
 @Component({
   selector: "app-forgot-password",
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule ],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: "./forgot-password.component.html",
 })
 export class ForgotPasswordComponent implements OnInit {
@@ -19,7 +20,7 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.forgotPasswordForm = this.formBuilder.group({
@@ -46,7 +47,7 @@ export class ForgotPasswordComponent implements OnInit {
         this.loading = false
       },
       error: (error) => {
-        this.error = error.message || "An error occurred"
+        this.error = error.message || "Ocurrio un error"
         this.loading = false
       },
     })

@@ -1,15 +1,16 @@
-import { Component,  OnInit } from "@angular/core"
-import {  FormBuilder,  FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
-import  { Store } from "@ngxs/store"
+import { Component, OnInit } from "@angular/core"
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
+import { Store } from "@ngxs/store"
 import { CommonModule } from "@angular/common"
-import  { Observable } from "rxjs"
+import { Observable } from "rxjs"
 import { Register } from "../../../state/auth/auth.actions"
 import { AuthState } from "../../../state/auth/auth.state"
+import { RouterLink } from "@angular/router"
 
 @Component({
   selector: "app-register",
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule ],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: "./register.component.html",
 })
 export class RegisterComponent implements OnInit {
@@ -67,7 +68,7 @@ export class RegisterComponent implements OnInit {
         username,
         email,
         roles: ["user"],
-        tenantIds: [1], // Default tenant
+        tenantIds: [1], // Tenant por defecto
       }),
     )
   }

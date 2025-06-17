@@ -1,13 +1,13 @@
-import { Component,  OnInit } from "@angular/core"
-import {  FormBuilder,  FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
-import  { ActivatedRoute, Router } from "@angular/router"
+import { Component, OnInit } from "@angular/core"
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
+import { ActivatedRoute, Router, RouterLink } from "@angular/router"
 import { CommonModule } from "@angular/common"
-import  { AuthService } from "../../../core/services/auth.service"
+import { AuthService } from "../../../core/services/auth.service"
 
 @Component({
   selector: "app-reset-password",
   standalone: true,
-  imports: [ ReactiveFormsModule, CommonModule ],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: "./reset-password.component.html",
 })
 export class ResetPasswordComponent implements OnInit {
@@ -23,13 +23,13 @@ export class ResetPasswordComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParams["token"] || ""
 
     if (!this.token) {
-      this.error = "Invalid password reset token"
+      this.error = "Contraseña incorrecta"
       return
     }
 
@@ -79,7 +79,7 @@ export class ResetPasswordComponent implements OnInit {
         }, 3000)
       },
       error: (error) => {
-        this.error = error.message || "An error occurred"
+        this.error = error.message || "Ocurrio un error"
         this.loading = false
       },
     })
