@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core"
-import  { HttpClient } from "@angular/common/http"
-import {  Observable, of } from "rxjs"
+import { HttpClient } from "@angular/common/http"
+import { Observable, of } from "rxjs"
 import { environment } from "../../../enviroments/environment"
-import  { Document } from "../../shared/models/document.model"
-import  { PaginatedResponse } from "../../shared/models/paginated-response.model"
+import { Document } from "../../shared/models/document.model"
+import { PaginatedResponse } from "../../shared/models/paginated-response.model"
 
 @Injectable({
   providedIn: "root",
@@ -15,40 +15,40 @@ export class DocumentService {
   private mockDocuments: Document[] = [
     {
       id: 1,
-      name: "Annual Report 2023",
-      description: "Financial report for 2023",
+      name: "Reporte Anual 2023",
+      description: "Reporte financiero para 2023",
       fileUrl: "assets/documents/report.pdf",
       createdAt: new Date("2023-12-15"),
       updatedAt: new Date("2023-12-15"),
       userId: 1,
       tenantId: 1,
-      tags: ["financial", "annual"],
+      tags: ["financiero", "anual"],
     },
     {
       id: 2,
-      name: "Project Proposal",
-      description: "New project proposal for Q1",
+      name: "Popuesta de proyecto",
+      description: "Nueva propuesta de proyecto Q1",
       fileUrl: "assets/documents/proposal.docx",
       createdAt: new Date("2024-01-05"),
       updatedAt: new Date("2024-01-10"),
       userId: 2,
       tenantId: 1,
-      tags: ["project", "proposal"],
+      tags: ["proyecto", "propuesta"],
     },
     {
       id: 3,
-      name: "Marketing Strategy",
-      description: "Marketing strategy for new product launch",
+      name: "Estrategia de Marketing",
+      description: "Propuesta de Marketing para lanzamiento de nuevos productos",
       fileUrl: "assets/documents/marketing.pptx",
       createdAt: new Date("2024-02-01"),
       updatedAt: new Date("2024-02-01"),
       userId: 1,
       tenantId: 2,
-      tags: ["marketing", "strategy"],
+      tags: ["marketing", "estrategia"],
     },
   ]
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getDocuments(
     tenantId: number,
@@ -85,7 +85,7 @@ export class DocumentService {
     // En una app real esto es una llamada a la api
     const document = this.mockDocuments.find((d) => d.id === id && d.tenantId === tenantId)
     if (!document) {
-      throw new Error("Document not found")
+      throw new Error("Documento no encontrado")
     }
     return of(document)
   }

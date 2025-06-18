@@ -1,18 +1,18 @@
-import { Component,  OnInit } from "@angular/core"
-import  { Store } from "@ngxs/store"
-import  { Observable } from "rxjs"
+import { Component, OnInit } from "@angular/core"
+import { Store } from "@ngxs/store"
+import { Observable } from "rxjs"
 import { LoadDocuments, SetDocumentFilters, ResetDocumentFilters } from "../../../state/document/document.actions"
 import { RouterLink } from "@angular/router"
 import { CommonModule } from "@angular/common"
 import { DocumentState } from "../../../state/document/document.state"
 import { TenantState } from "../../../state/tenant/tenant.state"
-import  { Document } from "../../../shared/models/document.model"
-import  { Tenant } from "../../../shared/models/tenant.model"
+import { Document } from "../../../shared/models/document.model"
+import { Tenant } from "../../../shared/models/tenant.model"
 
 @Component({
   selector: "app-document-list",
   standalone: true,
-  imports: [ RouterLink, CommonModule ],
+  imports: [RouterLink, CommonModule],
   templateUrl: "./document-list.component.html",
 })
 export class DocumentListComponent implements OnInit {
@@ -24,7 +24,7 @@ export class DocumentListComponent implements OnInit {
   filters$: Observable<{ search?: string; tags?: string[] }>
 
   selectedTags: string[] = []
-  availableTags: string[] = ["financial", "marketing", "project", "proposal", "report", "strategy", "meeting"]
+  availableTags: string[] = ["financiero", "marketing", "proyecto", "propuesta", "reporte", "strategia", "reunion"]
 
   constructor(private store: Store) {
     this.documents$ = this.store.select(DocumentState.documents)
