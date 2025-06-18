@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core"
-import  { HttpClient } from "@angular/common/http"
-import {  Observable, of } from "rxjs"
+import { HttpClient } from "@angular/common/http"
+import { Observable, of } from "rxjs"
 import { environment } from "../../../enviroments/environment"
-import  { Tenant } from "../../shared/models/tenant.model"
+import { Tenant } from "../../shared/models/tenant.model"
 
 @Injectable({
   providedIn: "root",
@@ -12,12 +12,12 @@ export class TenantService {
 
   // Tenants para la prueba
   private mockTenants: Tenant[] = [
-    { id: 1, name: "Acme Corporation", description: "A global conglomerate" },
-    { id: 2, name: "Stark Industries", description: "Technology and innovation leader" },
-    { id: 3, name: "Wayne Enterprises", description: "Multinational conglomerate" },
+    { id: 1, name: "Acme Corporation", description: "Una corporacion global" },
+    { id: 2, name: "Stark Industries", description: "Lider en innovacion y Tecnologia" },
+    { id: 3, name: "Wayne Enterprises", description: "Una multinacional" },
   ]
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getTenants(): Observable<Tenant[]> {
     // // En una app real esto es una llamada a la api
@@ -30,7 +30,7 @@ export class TenantService {
     if (!tenant) {
       throw new Error("Tenant no encontrados")
     }
-    return of({...tenant})
+    return of({ ...tenant })
   }
 
   getAllTenants(): Observable<Tenant[]> {
