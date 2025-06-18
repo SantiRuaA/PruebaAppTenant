@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core"
-import  { HttpClient, HttpHeaders } from "@angular/common/http"
-import  { Observable, of, throwError } from "rxjs"
+import { HttpClient, HttpHeaders } from "@angular/common/http"
+import { Observable, of, throwError } from "rxjs"
 import { map } from "rxjs/operators"
 import { environment } from "../../../enviroments/environment"
-import  { User } from "../../shared/models/user.model"
-import  { PaginatedResponse } from "../../shared/models/paginated-response.model"
+import { User } from "../../shared/models/user.model"
+import { PaginatedResponse } from "../../shared/models/paginated-response.model"
 
 @Injectable({
   providedIn: "root",
@@ -13,9 +13,8 @@ export class UserService {
   private apiUrl = environment.apiUrl
 
   // Nuestra "base de datos" simulada
-  private mockUsers: User[] = []; 
-  private isInitialLoadDone = false;
-  constructor(private http: HttpClient) {}
+  private mockUsers: User[] = [];
+  constructor(private http: HttpClient) { }
 
   getUsers(page = 0, limit = 10): Observable<PaginatedResponse<User>> {
     // Creamos la cabecera explícita que sí funciona
@@ -41,12 +40,12 @@ export class UserService {
     if (userFromMock) {
       return of({ ...userFromMock });
     }
-    
+
     // --- SOLUCIÓN: FORZAMOS LA CABECERA 'Accept' ---
     const headers = new HttpHeaders({
       'Accept': 'application/json'
     });
-    
+
     // Hacemos la llamada GET pasando las cabeceras como opción
     return this.http.get<any>(`${this.apiUrl}/users/${id}`, { headers: headers }).pipe(
       map(userData => this.mapDummyJsonUser(userData))
@@ -56,7 +55,7 @@ export class UserService {
   createUser(userData: Partial<User>): Observable<User> {
     // Simulamos la creación de un nuevo ID
     const newId = (this.mockUsers.length > 0 ? Math.max(...this.mockUsers.map(u => u.id)) : 0) + 1;
-    
+
     const newUser: User = {
       ...userData,
       id: newId,
@@ -65,13 +64,13 @@ export class UserService {
 
     // Añadimos el nuevo usuario a nuestra lista mock
     this.mockUsers = [...this.mockUsers, newUser];
-    
+
     return of(newUser);
   }
 
   updateUser(id: number, userData: Partial<User>): Observable<User> {
     const userIndex = this.mockUsers.findIndex(u => u.id === id);
-    
+
     if (userIndex > -1) {
       // Fusionamos el usuario existente con los datos nuevos.
       // Las propiedades en 'userData' (como 'roles' y 'tenantIds') sobreescribirán las viejas.
@@ -103,9 +102,9 @@ export class UserService {
       lastName: userData.lastName,
       image: userData.image,
       gender: userData.gender,
-      
+
       roles: assignedRoles,
-      
+
       tenantIds: [1, 2],
     };
   }

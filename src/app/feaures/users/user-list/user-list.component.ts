@@ -1,21 +1,22 @@
-import { Component,  OnInit } from "@angular/core"
-import  { Store } from "@ngxs/store"
-import  { Observable } from "rxjs"
+import { Component, OnInit } from "@angular/core"
+import { Store } from "@ngxs/store"
+import { Observable } from "rxjs"
 import { LoadUsers } from "../../../state/user/user.actions"
 import { UserState, UserStateModel } from "../../../state/user/user.state"
 import { CommonModule } from "@angular/common"
 import { TenantState } from "../../../state/tenant/tenant.state"
-import  { User } from "../../../shared/models/user.model"
-import  { Tenant } from "../../../shared/models/tenant.model"
+import { User } from "../../../shared/models/user.model"
+import { Tenant } from "../../../shared/models/tenant.model"
 import { RouterLink } from "@angular/router"
 
 @Component({
   selector: "app-user-list",
   standalone: true,
-  imports: [ RouterLink, CommonModule ],
+  imports: [RouterLink, CommonModule],
   templateUrl: "./user-list.component.html",
 })
 export class UserListComponent implements OnInit {
+  //El users$ por ejemplo lo devuelve el selector del .state es un observable ya que el @selector devuelve el observable pero no puede modificar, el @actions es el que modifica 
   users$: Observable<User[]>
   loading$: Observable<boolean>
   error$: Observable<string | null>
@@ -57,7 +58,7 @@ export class UserListComponent implements OnInit {
   isFirstPage(): boolean {
     return this.store.selectSnapshot(UserState.pagination).page === 0;
   }
-  
+
   isLastPage(): boolean {
     const pagination = this.store.selectSnapshot(UserState.pagination);
     const totalPages = Math.ceil(pagination.total / pagination.limit);
@@ -65,7 +66,7 @@ export class UserListComponent implements OnInit {
   }
 
   getRoleBadgeClass(roles: string[]): string {
-    
+
     if (roles.includes('admin')) {
       return 'bg-red-100 text-red-800';
     }
