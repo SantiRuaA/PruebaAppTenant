@@ -3,7 +3,7 @@
     <div *ngFor="let tag of tags; let i = index" class="inline-flex items-center px-2 py-1 rounded-md text-sm font-medium bg-indigo-100 text-indigo-800">
       {{ tag }}
       <button type="button" (click)="removeTag(i)" class="ml-1 text-indigo-500 hover:text-indigo-600">
-        <span class="material-icons text-sm">close</span>
+        <span class="material-icons text-sm">cerrar</span>
       </button>
     </div>
   </div>
@@ -21,8 +21,8 @@
       (click)="addTag()"
       class="ml-2 inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
     >
-      Add
+      Añadir
     </button>
   </div>
-  <p class="text-xs text-gray-500">Press Enter or comma to add a tag</p>
+  <p class="text-xs text-gray-500"></p>
 </div>

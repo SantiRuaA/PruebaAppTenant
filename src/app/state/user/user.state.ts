@@ -96,7 +96,7 @@ export class UserState {
         ctx.dispatch(new LoadUsersSuccess(response));
       }),
       catchError((error) => {
-        ctx.dispatch(new LoadUsersFailure(error.message || "Failed to load users"));
+        ctx.dispatch(new LoadUsersFailure(error.message || "Fallo al cargar los usuarios"));
         return of(error);
       })
     );
@@ -120,7 +120,7 @@ export class UserState {
     ctx.patchState({ loading: true, error: null });
     return this.userService.getUserById(action.id).pipe(
       tap((user) => ctx.dispatch(new LoadUserSuccess(user))),
-      catchError((error) => ctx.dispatch(new LoadUserFailure(error.message || "Failed to load user")))
+      catchError((error) => ctx.dispatch(new LoadUserFailure(error.message || "Fallo al cargar los usuarios")))
     );
   }
 
@@ -142,14 +142,14 @@ export class UserState {
     });
   }
 
-  // El resto de tus manejadores para Create, Update, Delete
+  // El resto de manejadores para Create, Update, Delete
   @Action(CreateUser)
   createUser(ctx: StateContext<UserStateModel>, { userData, password }: CreateUser) {
     ctx.patchState({ loading: true, error: null });
     const payload = { ...userData, password: password };
     return this.userService.createUser(payload).pipe(
       tap((user) => ctx.dispatch(new CreateUserSuccess(user))),
-      catchError((error) => ctx.dispatch(new CreateUserFailure(error.message || "Failed to create user")))
+      catchError((error) => ctx.dispatch(new CreateUserFailure(error.message || "Fallo al crear el usuario")))
     );
   }
 
@@ -174,12 +174,12 @@ export class UserState {
   updateUser(ctx: StateContext<UserStateModel>, action: UpdateUser) {
     ctx.patchState({ loading: true, error: null })
 
-    return this.userService.updateUser(action.id, action.tenantId, action.userData).pipe(
+    return this.userService.updateUser(action.id, action.userData).pipe(
       tap((user) => {
         ctx.dispatch(new UpdateUserSuccess(user))
       }),
       catchError((error) => {
-        ctx.dispatch(new UpdateUserFailure(error.message || "Failed to update user"))
+        ctx.dispatch(new UpdateUserFailure(error.message || "Fallo al actualizar el usuario"))
         return of(error)
       }),
     )
@@ -212,11 +212,11 @@ export class UserState {
         if (success) {
           ctx.dispatch(new DeleteUserSuccess(action.id))
         } else {
-          ctx.dispatch(new DeleteUserFailure("Failed to delete user"))
+          ctx.dispatch(new DeleteUserFailure("Fallo al eliminar el usuario"))
         }
       }),
       catchError((error) => {
-        ctx.dispatch(new DeleteUserFailure(error.message || "Failed to delete user"))
+        ctx.dispatch(new DeleteUserFailure(error.message || "Fallo al eliminar el usuario"))
         return of(error)
       }),
     )

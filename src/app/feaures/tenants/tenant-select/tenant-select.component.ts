@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { Router, RouterLink } from '@angular/router'; 
-import { Store, Select } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { LoadTenants, ChangeTenant } from '../../../state/tenant/tenant.actions';
 import { TenantState } from '../../../state/tenant/tenant.state';

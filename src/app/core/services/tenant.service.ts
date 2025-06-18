@@ -10,7 +10,7 @@ import  { Tenant } from "../../shared/models/tenant.model"
 export class TenantService {
   private apiUrl = environment.apiUrl
 
-  // Mock tenants for demo purposes
+  // Tenants para la prueba
   private mockTenants: Tenant[] = [
     { id: 1, name: "Acme Corporation", description: "A global conglomerate" },
     { id: 2, name: "Stark Industries", description: "Technology and innovation leader" },
@@ -20,15 +20,15 @@ export class TenantService {
   constructor(private http: HttpClient) {}
 
   getTenants(): Observable<Tenant[]> {
-    // In a real app, this would be an API call
+    // // En una app real esto es una llamada a la api
     return of([...this.mockTenants])
   }
 
   getTenant(id: number): Observable<Tenant> {
-    // In a real app, this would be an API call
+    // // En una app real esto es una llamada a la api
     const tenant = this.mockTenants.find((t) => t.id === id)
     if (!tenant) {
-      throw new Error("Tenant not found")
+      throw new Error("Tenant no encontrados")
     }
     return of({...tenant})
   }
@@ -38,7 +38,7 @@ export class TenantService {
   }
 
   createTenant(tenantData: Partial<Tenant>): Observable<Tenant> {
-    // In a real app, this would be an API call
+    // En una app real esto es una llamada a la api
     const newTenant: Tenant = {
       id: (this.mockTenants.length > 0 ? Math.max(...this.mockTenants.map(t => t.id)) : 0) + 1,
       name: tenantData.name || "",
@@ -59,7 +59,7 @@ export class TenantService {
     });
 
     if (!updatedTenant) {
-      throw new Error("Tenant not found for update");
+      throw new Error("Tenant no encontrados para actualizar");
     }
     return of(updatedTenant);
   }

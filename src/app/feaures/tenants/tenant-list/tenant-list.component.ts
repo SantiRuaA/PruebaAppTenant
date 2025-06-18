@@ -27,8 +27,6 @@ export class TenantListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // YA NO ES NECESARIO LLAMAR a this.loadTenants() aquí,
-    // porque el AppComponent ya lo hizo por nosotros al cargar la app.
     // Si la lista está vacía, llamarlo como un respaldo.
     const tenants = this.store.selectSnapshot(TenantState.tenants);
     if (tenants.length === 0) {

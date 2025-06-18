@@ -14,7 +14,7 @@
           for="file-upload"
           class="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
         >
-          <span>Upload a file</span>
+          <span>Sube un archivo</span>
           <input
             id="file-upload"
             name="file-upload"
@@ -25,7 +25,7 @@
             (change)="onFileSelected($event)"
           />
         </label>
-        <p class="pl-1">or drag and drop</p>
+        <p class="pl-1">Arrastra y suelta</p>
       </div>
       <p class="text-xs text-gray-500">
         {{ multiple ? 'Files' : 'File' }} up to {{ formatSize(maxSize) }}
@@ -40,14 +40,14 @@
   <div *ngIf="files.length > 0" class="space-y-2">
     <div *ngFor="let file of files; let i = index" class="flex items-center justify-between rounded-md border border-gray-200 p-2">
       <div class="flex items-center">
-        <span class="material-icons text-gray-400 mr-2">description</span>
+        <span class="material-icons text-gray-400 mr-2">descripcion</span>
         <div>
           <p class="text-sm font-medium text-gray-900">{{ file.name }}</p>
           <p class="text-xs text-gray-500">{{ formatSize(file.size) }}</p>
         </div>
       </div>
       <button (click)="removeFile(i)" class="text-gray-400 hover:text-gray-500">
-        <span class="material-icons">close</span>
+        <span class="material-icons">cerrar</span>
       </button>
     </div>
   </div>

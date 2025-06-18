@@ -20,7 +20,7 @@ export const roleGuard: CanActivateFn = (route, state) => {
         return true;
       }
 
-      // Redirige a una página de "acceso denegado" o al dashboard principal.
+      // Redirige a la página del dashboard.
       return router.createUrlTree(["/dashboard"]); 
     })
   );

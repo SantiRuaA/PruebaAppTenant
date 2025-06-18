@@ -8,7 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = store.selectSnapshot(AuthState.token); 
 
   // Definimos las rutas públicas que no necesitan token
-  const publicRoutes = ['/user/login', '/users'];
+  const publicRoutes = ['/user/login'];
 
   // Verificamos si la URL de la petición actual contiene alguna de las rutas públicas
   const isPublicRoute = publicRoutes.some(route => req.url.includes(route));
@@ -17,6 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (token && !isPublicRoute) {
     const authReq = req.clone({
       setHeaders: {
+        //Bearer es un esquema de autenticación estándar (definido por OAuth 2.0)
         Authorization: `Bearer ${token}`,
       },
     });

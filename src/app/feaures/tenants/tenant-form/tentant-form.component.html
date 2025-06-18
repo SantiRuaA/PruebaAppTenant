@@ -3,14 +3,14 @@
     <a routerLink="/tenants" class="text-indigo-600 hover:text-indigo-900 mr-2">
       <span class="material-icons text-sm">arrow_back</span>
     </a>
-    <h1 class="text-2xl font-bold text-gray-900">{{ isEditMode ? 'Edit' : 'New' }} Tenant</h1>
+    <h1 class="text-2xl font-bold text-gray-900">{{ isEditMode ? 'Editar' : 'Nuevo' }} Tenant</h1>
   </div>
 
   <div class="bg-white rounded-lg shadow overflow-hidden">
     <form [formGroup]="tenantForm" (ngSubmit)="onSubmit()" class="p-6">
       <div class="space-y-6">
         <div>
-          <label for="name" class="block text-sm font-medium text-gray-700">Tenant Name</label>
+          <label for="name" class="block text-sm font-medium text-gray-700">Nombre del tenant</label>
           <input 
             type="text" 
             id="name" 
@@ -19,12 +19,12 @@
             placeholder="Enter tenant name"
           >
           <div *ngIf="tenantForm.get('name')?.invalid && tenantForm.get('name')?.touched" class="text-red-500 text-xs mt-1">
-            Tenant name is required
+            Nombre del tenant requerido
           </div>
         </div>
 
         <div>
-          <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+          <label for="description" class="block text-sm font-medium text-gray-700">Descripcion</label>
           <textarea 
             id="description" 
             formControlName="description" 
@@ -34,14 +34,14 @@
           ></textarea>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Boton de enviar -->
         <div class="flex justify-end">
           <button 
             type="button" 
             routerLink="/tenants" 
             class="mr-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Cancel
+            Cancelar
           </button>
           <button 
             type="submit" 
@@ -51,7 +51,7 @@
             <span *ngIf="loading$ | async" class="mr-2">
               <div class="animate-spin h-4 w-4 border-t-2 border-b-2 border-white rounded-full"></div>
             </span>
-            {{ isEditMode ? 'Update' : 'Create' }} Tenant
+            {{ isEditMode ? 'Actualizar' : 'Crear' }} Tenant
           </button>
         </div>
       </div>

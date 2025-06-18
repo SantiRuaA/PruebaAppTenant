@@ -53,7 +53,6 @@ export class UpdateUser {
   static readonly type = "[User] Update User"
   constructor(
     public id: number,
-    public tenantId: number,
     public userData: Partial<User>,
   ) {}
 }

@@ -28,12 +28,12 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<{ message: string }> {
-    console.log(`[AuthService] Password reset requested for ${email}`);
-    return of({ message: "Password reset email sent" }).pipe(tap(() => setTimeout(() => {}, 1000)));
+    console.log(`[AuthService] Cambio de contraseña solicitado por ${email}`);
+    return of({ message: "Email de cambio de contraseña enviado" }).pipe(tap(() => setTimeout(() => {}, 1000)));
   }
 
   resetPassword(token: string, newPassword: string): Observable<{ message: string }> {
-    console.log(`[AuthService] Password reset attempt with token ${token}`);
-    return of({ message: "Password has been reset successfully" }).pipe(tap(() => setTimeout(() => {}, 1000)));
+    console.log(`[AuthService] Intento de reseteo de contraseña con token ${token}`);
+    return of({ message: "Contraseña actializada con exito" }).pipe(tap(() => setTimeout(() => {}, 1000)));
   }
 }

@@ -111,8 +111,8 @@ export class ProfileComponent implements OnInit {
       return
     }
 
-    // In a real app, this would call an API to update the password
-    // For demo purposes, we'll just show a success message
+    // En una app real hay que hacer peticion a la api para cambiar la contraseña
+    // Para la prueba se pone un mensaje exitoso
     this.passwordUpdateSuccess = true
     setTimeout(() => {
       this.passwordUpdateSuccess = false

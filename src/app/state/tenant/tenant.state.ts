@@ -90,7 +90,7 @@ export class TenantState {
         return ctx.dispatch(new LoadTenantsSuccess(allTenants));
       }),
       catchError((error) => {
-        return ctx.dispatch(new LoadTenantsFailure(error.message || "Failed to load tenants"));
+        return ctx.dispatch(new LoadTenantsFailure(error.message || "Fallo en cargar los tenant"));
       })
     );
   }
@@ -109,7 +109,7 @@ export class TenantState {
       catchError((error) => {
         ctx.patchState({
           loading: false,
-          error: error.message || "Failed to load tenant",
+          error: error.message || "Fallo en cargar los tenant",
         });
         return of(error);
       })
@@ -175,7 +175,7 @@ export class TenantState {
       catchError((error) => {
         ctx.patchState({
           loading: false,
-          error: error.message || "Failed to create tenant",
+          error: error.message || "Fallo al crear el tenant",
         })
         return of(error)
       }),
@@ -199,7 +199,7 @@ export class TenantState {
       catchError((error) => {
         ctx.patchState({
           loading: false,
-          error: error.message || "Failed to update tenant",
+          error: error.message || "Fallo al actualizar el tenant",
         })
         return of(error)
       }),
@@ -216,7 +216,7 @@ export class TenantState {
           const state = ctx.getState()
           const tenants = state.tenants.filter((tenant) => tenant.id !== action.id)
 
-          // If the deleted tenant was the current one, switch to another tenant
+          // si el tenant eliminado es el actual cambia a otro
           let currentTenantId = state.currentTenantId
           if (currentTenantId === action.id) {
             currentTenantId = tenants.length > 0 ? tenants[0].id : null
@@ -232,7 +232,7 @@ export class TenantState {
       catchError((error) => {
         ctx.patchState({
           loading: false,
-          error: error.message || "Failed to delete tenant",
+          error: error.message || "Fallo al eliminar el tenant",
         })
         return of(error)
       }),

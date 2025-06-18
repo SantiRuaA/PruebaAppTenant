@@ -1,36 +1,36 @@
 <div class="container mx-auto px-4 py-6">
   <div class="flex justify-between items-center mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Users</h1>
+      <h1 class="text-2xl font-bold text-gray-900">Usuarios</h1>
       <p class="text-gray-600" *ngIf="(currentTenant$ | async) as tenant">
         {{ tenant.name }}
       </p>
     </div>
     <a routerLink="/users/new" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-      <span class="material-icons mr-2 text-sm">add</span>
-      New User
+      <span class="material-icons mr-2 text-sm"></span>
+      Nuevo usuario
     </a>
   </div>
 
-  <!-- User list -->
+  <!-- Lista de usuarios -->
   <div *ngIf="(users$ | async)?.length && !(loading$ | async)" class="bg-white rounded-lg shadow overflow-hidden">
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            User
+            Usuario
           </th>
           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Email
           </th>
           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Role
+            Rol
           </th>
           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Status
           </th>
           <th scope="col" class="relative px-6 py-3">
-            <span class="sr-only">Actions</span>
+            <span class="sr-only">Acciones</span>
           </th>
         </tr>
       </thead>
@@ -69,8 +69,8 @@
             </span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <a [routerLink]="['/users', user.id]" class="text-indigo-600 hover:text-indigo-900 mr-4">View</a>
-            <a [routerLink]="['/users', user.id, 'edit']" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+            <a [routerLink]="['/users', user.id]" class="text-indigo-600 hover:text-indigo-900 mr-4">Ver</a>
+            <a [routerLink]="['/users', user.id, 'edit']" class="text-indigo-600 hover:text-indigo-900">Editar</a>
           </td>
         </tr>
       </tbody>
@@ -107,16 +107,16 @@
 
   <!-- Empty state -->
   <div *ngIf="(users$ | async)?.length === 0 && !(loading$ | async)" class="bg-white rounded-lg shadow-sm p-8 text-center">
-    <span class="material-icons text-gray-400 text-5xl mb-4">people</span>
-    <h3 class="text-lg font-medium text-gray-900 mb-1">No users found</h3>
-    <p class="text-gray-500 mb-4">Get started by creating a new user.</p>
+    <span class="material-icons text-gray-400 text-5xl mb-4">personas</span>
+    <h3 class="text-lg font-medium text-gray-900 mb-1">No se encontraron usuarios</h3>
+    <p class="text-gray-500 mb-4">Empieza creando un nuevo usuario.</p>
     <a routerLink="/users/new" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-      <span class="material-icons mr-2 text-sm">add</span>
-      New User
+      <span class="material-icons mr-2 text-sm">añadir</span>
+      Nuevo usuario
     </a>
   </div>
 
-  <!-- Loading state -->
+  <!-- Loading -->
   <div *ngIf="loading$ | async" class="flex justify-center my-8">
     <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
   </div>

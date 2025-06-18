@@ -5,7 +5,6 @@ import { forkJoin, of } from "rxjs"
 import { Navigate } from "@ngxs/router-plugin"
 import  { AuthService } from "../../core/services/auth.service"
 import  { User } from "../../shared/models/user.model"
-import { LoadTenants, LoadTenantsSuccess } from "../tenant/tenant.actions"
 import {
   Login,
   LoginSuccess,
@@ -19,8 +18,7 @@ import {
   SessionRestored,
 } from "./auth.actions"
 import { UserService } from "../../core/services/user.service"
-import { LoadUsers } from "../user/user.actions"
-import { TenantState } from "../tenant/tenant.state"
+
 
 export interface AuthStateModel {
   user: User | null
@@ -142,7 +140,6 @@ export class AuthState {
 
   @Action(LoginFailure)
   loginFailure(ctx: StateContext<AuthStateModel>, action: LoginFailure) {
-    console.log("Paso2: state - accion recibida:", action)
     ctx.patchState({
       loading: false,
       error: action.error,
@@ -151,9 +148,23 @@ export class AuthState {
 
   @Action(Logout)
   logout(ctx: StateContext<AuthStateModel>) {
-    // Limpiar el localStorage
+    const tokenBefore = localStorage.getItem('authToken');
+
+    // Primero, limpiamos el localStorage de forma manual y explícita.
     localStorage.removeItem('authToken');
-    return ctx.dispatch(new Navigate(["/auth/login"]));
+
+    const tokenAfter = localStorage.getItem('authToken');
+
+    ctx.setState({
+      user: null,
+      token: null,
+      refreshToken: null, // resetear todas las propiedades
+      isAuthenticated: false,
+      error: null,
+      loading: false,
+    });
+
+    return ctx.dispatch(new Navigate(['/auth/login']));
   }
 
   @Action(Register)
@@ -203,10 +214,10 @@ export class AuthState {
     const state = ctx.getState()
 
     if (state.token && state.user) {
-      // Token exists, user is authenticated
+      // Token existe, autentica el usuario
       ctx.patchState({ isAuthenticated: true })
     } else {
-      // No token, user is not authenticated
+      // Token no existe, usuario no autenticado
       ctx.patchState({ isAuthenticated: false })
     }
   }

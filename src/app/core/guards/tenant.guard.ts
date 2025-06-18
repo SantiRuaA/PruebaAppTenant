@@ -14,7 +14,7 @@ export const tenantGuard: CanActivateFn = (route, state) => {
         return true
       }
 
-      // Redirect to tenant selection
+      // manda a seleccionar tenant
       return router.createUrlTree(["/select-tenant"])
     }),
   )

@@ -1,154 +1,205 @@
-import { Component,  OnInit } from "@angular/core"
-import {  FormBuilder,  FormGroup, Validators } from "@angular/forms"
-import  { ActivatedRoute, Router } from "@angular/router"
-import  { Store } from "@ngxs/store"
-import { CommonModule } from "@angular/common"
-import { ReactiveFormsModule } from "@angular/forms"
-import  { Observable } from "rxjs"
-import { take, filter } from 'rxjs/operators'; 
-import { LoadUser, CreateUser, UpdateUser } from "../../../state/user/user.actions"
-import { UserState } from "../../../state/user/user.state"
-import { TenantState } from "../../../state/tenant/tenant.state"
-import { User } from "../../../shared/models/user.model"
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+import { User } from '../../../shared/models/user.model';
+import { Tenant } from '../../../shared/models/tenant.model';
+
+import { UserState } from '../../../state/user/user.state';
+import { CreateUser, UpdateUser, LoadUser } from '../../../state/user/user.actions';
+
+import { TenantState } from '../../../state/tenant/tenant.state';
+import { LoadTenants } from '../../../state/tenant/tenant.actions';
 
 @Component({
-  selector: "app-user-form",
+  selector: 'app-user-form',
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule ],
-  templateUrl: "./user-form.component.html",
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  templateUrl: './user-form.component.html',
 })
 export class UserFormComponent implements OnInit {
-  userForm!: FormGroup
-  isEditMode = false
-  userId: number | null = null
-  loading$: Observable<boolean>
-  error$: Observable<string | null>
+  userForm!: FormGroup;
+  isEditMode = false;
+  userId: number | null = null;
 
-  roles = [
-    { value: "admin", label: "Admin" },
-    { value: "manager", label: "Manager" },
-    { value: "user", label: "User" },
-  ]
+  // Observables para el estado de carga y errores
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
+  // Observable para la lista completa de tenants
+  allTenants$: Observable<Tenant[]>;
+
+  // Lista de roles disponibles para mostrar en el formulario
+  availableRoles = ['admin', 'user'];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private store: Store,
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) {
-    this.loading$ = this.store.select(UserState.loading)
-    this.error$ = this.store.select(UserState.error)
+    // Inicializamos los observables desde el store
+    this.loading$ = this.store.select(UserState.loading);
+    this.error$ = this.store.select(UserState.error);
+    this.allTenants$ = this.store.select(TenantState.tenants);
+  }
+
+  // Helpers para acceder fácilmente a los FormArrays desde el template
+  get rolesFormArray() {
+    return this.userForm.get('roles') as FormArray;
+  }
+
+  get tenantsFormArray() {
+    return this.userForm.get('tenantIds') as FormArray;
   }
 
   ngOnInit(): void {
-    this.initForm()
+    // Al iniciar, pedimos la lista de todos los tenants para poder mostrarlos
+    this.store.dispatch(new LoadTenants());
+    this.initializeForm();
 
-    // Check if we're in edit mode
-    const id = this.route.snapshot.paramMap.get("id")
-    if (id) {
-      this.isEditMode = true
-      this.userId = Number(id)
-      this.loadUser(Number(id))
-    }
-  }
+    // Verificamos si estamos en modo edición
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.isEditMode = true;
+      this.userId = +idParam;
+      this.store.dispatch(new LoadUser(this.userId));
 
-  initForm(): void {
-    this.userForm = this.formBuilder.group({
-      firstName: ["", [Validators.required]],
-      lastName: ["", [Validators.required]],
-      email: ["", [Validators.required, Validators.email]],
-      username: ["", [Validators.required]],
-      role: ["user", [Validators.required]],
-      phone: [""],
-      address: this.formBuilder.group({
-        street: [""],
-        city: [""],
-        state: [""],
-        zipCode: [""],
-        country: [""],
-      }),
-    })
-
-    // Add password fields only for new users
-    if (!this.isEditMode) {
-      this.userForm.addControl("password", this.formBuilder.control("", [Validators.required, Validators.minLength(6)]))
-      this.userForm.addControl(
-        "confirmPassword",
-        this.formBuilder.control("", [Validators.required, this.passwordMatchValidator.bind(this)]),
-      )
-    }
-  }
-
-  passwordMatchValidator(control: any): { [key: string]: boolean } | null {
-    if (!this.userForm) {
-      return null
-    }
-    const password = this.userForm.get("password")?.value
-    const confirmPassword = control.value
-    return password === confirmPassword ? null : { passwordMismatch: true }
-  }
-
-  loadUser(id: number): void {
-    const currentTenantId = this.store.selectSnapshot(TenantState.currentTenantId);
-    if (currentTenantId) {
-      this.store.dispatch(new LoadUser(id)); // Despachamos la acción
-
-      // Reaccionamos al cambio en el estado para rellenar el formulario
+      // Cuando el usuario a editar se cargue en el estado, poblamos el formulario
       this.store.select(UserState.selectedUser).pipe(
-        // take(1) asegura que la suscripción se cierre automáticamente después de recibir el primer valor no nulo.
-        filter(user => user !== null && user.id === id),
-        take(1)
-      ).subscribe(user => {
-        if (user) {
-          this.userForm.patchValue(user); // Rellenamos el formulario
-        }
-      });
+        tap(user => {
+          if (user && user.id === this.userId) {
+            this.populateFormWithUserData(user);
+          }
+        })
+      ).subscribe();
+    } else {
+      // Si estamos en modo CREACIÓN, poblamos los checkboxes vacíos
+      this.populateFormWithUserData(null);
     }
+  }
+
+  initializeForm(): void {
+    this.userForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      username: ['', Validators.required],
+      // Creamos los FormArrays vacíos. Se llenarán dinámicamente.
+      roles: this.fb.array([]),
+      tenantIds: this.fb.array([]),
+      phone: [''], 
+      address: this.fb.group({ 
+        street: [''],
+        city: [''],
+        state: [''],
+        zipCode: [''],
+        country: [''],
+      }),
+      password: [''],
+      confirmPassword: ['']
+    });
+
+    if (!this.isEditMode) {
+      // ...hacemos que los campos de contraseña sean obligatorios.
+      this.userForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+      this.userForm.get('confirmPassword')?.setValidators([Validators.required]);
+      
+      // Y añadimos el validador que compara ambas contraseñas al GRUPO completo.
+      this.userForm.setValidators(this.passwordMatchValidator);
+    }
+  }
+
+  passwordMatchValidator = (control: AbstractControl): ValidationErrors | null => {
+    // El 'control' que llega aquí cuando se usa en setValidators es el FormGroup completo.
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    // Si los controles aún no existen (como en modo edición), no hacemos nada.
+    if (!password && !confirmPassword) {
+      return null;
+    }
+    
+    // Devolvemos el error si no coinciden.
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+  populateFormWithUserData(user: User | null): void {
+    // Rellenamos los campos de texto si el usuario existe
+    if (user) {
+      this.userForm.patchValue(user);
+    }
+    
+    // Suscripción para poblar los checkboxes de tenants una vez que se carguen
+    this.allTenants$.subscribe(allTenants => {
+      if (allTenants.length > 0) {
+        this.tenantsFormArray.clear();
+        allTenants.forEach(tenant => {
+          const isChecked = user?.tenantIds?.includes(tenant.id) ?? false;
+          this.tenantsFormArray.push(this.fb.control(isChecked));
+        });
+      }
+    });
+
+    // Poblamos los checkboxes de roles
+    this.rolesFormArray.clear();
+    this.availableRoles.forEach(role => {
+      const isChecked = user?.roles?.includes(role) ?? false;
+      this.rolesFormArray.push(this.fb.control(isChecked));
+    });
   }
 
   onSubmit(): void {
     if (this.userForm.invalid) {
+      console.error("Formulario inválido:", this.userForm.errors);
       return;
     }
 
     const currentTenant = this.store.selectSnapshot(TenantState.currentTenant);
     if (!currentTenant) {
+      // Idealmente, aquí muestras un error al usuario
+      console.error("No hay un tenant seleccionado para realizar la operación.");
       return;
     }
+    const formValue = this.userForm.value;
 
-    const formData = this.userForm.value;
+    // Convertimos los arrays de booleans (true/false) a arrays de valores reales
+    const selectedRoles = formValue.roles
+      .map((checked: boolean, i: number) => checked ? this.availableRoles[i] : null)
+      .filter((value: string | null): value is string => value !== null);
+
+    const allTenants = this.store.selectSnapshot(TenantState.tenants);
+    const selectedTenantIds = formValue.tenantIds
+      .map((checked: boolean, i: number) => checked ? allTenants[i].id : null)
+      .filter((value: number | null): value is number => value !== null);
+      
+    // Creamos el payload final
+    const finalUserData: Partial<User> = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      username: formValue.username,
+      roles: selectedRoles,
+      tenantIds: selectedTenantIds,
+    };
 
     if (this.isEditMode && this.userId) {
-      const userData: Partial<User> = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        username: formData.username,
-        roles: [formData.role], 
-
-      };
-
-      this.store.dispatch(new UpdateUser(this.userId, currentTenant.id, userData))
-        .subscribe({
-          next: () => {
-            this.router.navigate(["/users", this.userId]);
-          },
+      // Update existing user
+      // --- CORRECCIÓN AQUÍ ---
+      // Ahora pasamos los 3 argumentos que la acción espera: id, tenantId, y los datos.
+      this.store.dispatch(new UpdateUser(this.userId, finalUserData))
+        .subscribe(() => {
+          this.router.navigate(['/users']);
         });
     } else {
-      const userData: Partial<User> = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        username: formData.username,
-        roles: [formData.role],
-        tenantIds: [currentTenant.id],
-      };
-
-      this.store.dispatch(new CreateUser(userData, formData.password))
-        .subscribe({
-          next: () => {
-            this.router.navigate(["/users"]);
-          },
+      // Create new user
+      // La llamada a CreateUser ya estaba bien.
+      this.store.dispatch(new CreateUser(finalUserData, formValue.password))
+        .subscribe(() => {
+          this.router.navigate(['/users']);
         });
     }
   }

@@ -7,7 +7,7 @@ export const tenantInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(Store)
   const selectedTenant = store.selectSnapshot(TenantState.currentTenant)
 
-  // Only add tenant header for API requests that should be tenant-specific
+  //Que la URL incluya /api/ (es decir, es una llamada al backend), Que NO sea una ruta relacionada con /auth/ o /tenants/, donde probablemente no se necesita enviar el tenant (por ejemplo: login o seleccionar tenant).
   if (selectedTenant && req.url.includes("/api/") && !req.url.includes("/auth/") && !req.url.includes("/tenants/")) {
     const tenantReq = req.clone({
       setHeaders: {

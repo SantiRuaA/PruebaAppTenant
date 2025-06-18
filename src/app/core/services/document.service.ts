@@ -11,7 +11,7 @@ import  { PaginatedResponse } from "../../shared/models/paginated-response.model
 export class DocumentService {
   private apiUrl = environment.apiUrl
 
-  // Mock documents for demo purposes
+  // documentos para la prueba
   private mockDocuments: Document[] = [
     {
       id: 1,
@@ -57,7 +57,7 @@ export class DocumentService {
     search?: string,
     tags?: string[],
   ): Observable<PaginatedResponse<Document>> {
-    // In a real app, this would be an API call
+    // En una app real esto es una llamada a la api
     let filteredDocs = this.mockDocuments.filter((doc) => doc.tenantId === tenantId)
 
     if (search) {
@@ -82,7 +82,7 @@ export class DocumentService {
   }
 
   getDocumentById(id: number, tenantId: number): Observable<Document> {
-    // In a real app, this would be an API call
+    // En una app real esto es una llamada a la api
     const document = this.mockDocuments.find((d) => d.id === id && d.tenantId === tenantId)
     if (!document) {
       throw new Error("Document not found")
@@ -91,7 +91,7 @@ export class DocumentService {
   }
 
   createDocument(documentData: Partial<Document>): Observable<Document> {
-    // In a real app, this would be an API call
+    // En una app real esto es una llamada a la api
     const newDocument: Document = {
       id: this.mockDocuments.length + 1,
       name: documentData.name || "",
@@ -108,7 +108,7 @@ export class DocumentService {
   }
 
   updateDocument(id: number, tenantId: number, documentData: Partial<Document>): Observable<Document> {
-    // In a real app, this would be an API call
+    // En una app real esto es una llamada a la api
     const index = this.mockDocuments.findIndex((d) => d.id === id && d.tenantId === tenantId)
     if (index !== -1) {
       this.mockDocuments[index] = {
@@ -118,11 +118,11 @@ export class DocumentService {
       }
       return of(this.mockDocuments[index])
     }
-    throw new Error("Document not found")
+    throw new Error("Documentos no encontrados")
   }
 
   deleteDocument(id: number, tenantId: number): Observable<boolean> {
-    // In a real app, this would be an API call
+    // En una app real esto es una llamada a la api
     const index = this.mockDocuments.findIndex((d) => d.id === id && d.tenantId === tenantId)
     if (index !== -1) {
       this.mockDocuments.splice(index, 1)
@@ -132,8 +132,8 @@ export class DocumentService {
   }
 
   uploadFile(file: File, tenantId: number): Observable<{ fileUrl: string }> {
-    // In a real app, this would upload the file to a server or cloud storage
-    // For demo purposes, we'll simulate a successful upload
+    // En una app real esto hay que subirlo al servidor o a la nube
+    // Para la demo lo damos como exitoso
     return of({ fileUrl: `assets/documents/${file.name}` })
   }
 }

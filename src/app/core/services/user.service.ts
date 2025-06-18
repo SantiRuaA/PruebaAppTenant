@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core"
 import  { HttpClient, HttpHeaders } from "@angular/common/http"
-import  { Observable } from "rxjs"
+import  { Observable, of, throwError } from "rxjs"
 import { map } from "rxjs/operators"
 import { environment } from "../../../enviroments/environment"
 import  { User } from "../../shared/models/user.model"
@@ -12,17 +12,20 @@ import  { PaginatedResponse } from "../../shared/models/paginated-response.model
 export class UserService {
   private apiUrl = environment.apiUrl
 
+  // Nuestra "base de datos" simulada
+  private mockUsers: User[] = []; 
+  private isInitialLoadDone = false;
   constructor(private http: HttpClient) {}
 
   getUsers(page = 0, limit = 10): Observable<PaginatedResponse<User>> {
-    // 2. Creamos la cabecera explícita que sí funciona
+    // Creamos la cabecera explícita que sí funciona
     const headers = new HttpHeaders({
       'Accept': 'application/json'
     });
 
     const url = `${this.apiUrl}/users?limit=${limit}&skip=${page * limit}`;
 
-    // 3. Hacemos la llamada GET pasando las cabeceras como opción
+    // Hacemos la llamada GET pasando las cabeceras como opción
     return this.http.get<any>(url, { headers: headers }).pipe(
       map((response) => ({
         items: response.users.map((user: any) => this.mapDummyJsonUser(user)),
@@ -34,15 +37,51 @@ export class UserService {
   }
 
   getUserById(id: number): Observable<User> {
-    return this.http.get<any>(`${this.apiUrl}/users/${id}`).pipe(map(this.mapDummyJsonUser))
+    const userFromMock = this.mockUsers.find(u => u.id === id);
+    if (userFromMock) {
+      return of({ ...userFromMock });
+    }
+    
+    // --- SOLUCIÓN: FORZAMOS LA CABECERA 'Accept' ---
+    const headers = new HttpHeaders({
+      'Accept': 'application/json'
+    });
+    
+    // Hacemos la llamada GET pasando las cabeceras como opción
+    return this.http.get<any>(`${this.apiUrl}/users/${id}`, { headers: headers }).pipe(
+      map(userData => this.mapDummyJsonUser(userData))
+    );
   }
 
   createUser(userData: Partial<User>): Observable<User> {
-    return this.http.post<any>(`${this.apiUrl}/users/add`, userData).pipe(map(this.mapDummyJsonUser))
+    // Simulamos la creación de un nuevo ID
+    const newId = (this.mockUsers.length > 0 ? Math.max(...this.mockUsers.map(u => u.id)) : 0) + 1;
+    
+    const newUser: User = {
+      ...userData,
+      id: newId,
+      image: `https://dummyjson.com/icon/newuser/128`, // Imagen genérica
+    } as User;
+
+    // Añadimos el nuevo usuario a nuestra lista mock
+    this.mockUsers = [...this.mockUsers, newUser];
+    
+    return of(newUser);
   }
 
-  updateUser(id: number, tenantId: number, userData: Partial<User>): Observable<User> {
-    return this.http.put<any>(`${this.apiUrl}/users/${id}`, userData).pipe(map(this.mapDummyJsonUser))
+  updateUser(id: number, userData: Partial<User>): Observable<User> {
+    const userIndex = this.mockUsers.findIndex(u => u.id === id);
+    
+    if (userIndex > -1) {
+      // Fusionamos el usuario existente con los datos nuevos.
+      // Las propiedades en 'userData' (como 'roles' y 'tenantIds') sobreescribirán las viejas.
+      const updatedUser = { ...this.mockUsers[userIndex], ...userData };
+      this.mockUsers[userIndex] = updatedUser;
+      return of(updatedUser);
+    }
+
+    // Devolvemos un error si no se encuentra el usuario
+    return throwError(() => new Error('User not found for update'));
   }
 
   deleteUser(id: number): Observable<boolean> {

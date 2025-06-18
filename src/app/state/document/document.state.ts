@@ -4,7 +4,6 @@ import { tap, catchError } from "rxjs/operators"
 import { of } from "rxjs"
 import  { DocumentService } from "../../core/services/document.service"
 import  { Document } from "../../shared/models/document.model"
-import { Navigate } from "@ngxs/router-plugin"
 import {
   LoadDocuments,
   LoadDocumentsSuccess,
@@ -226,7 +225,7 @@ export class DocumentState {
       documents: [...state.documents, action.document],
       selectedDocument: action.document,
       loading: false,
-      uploadedFileUrl: null, // Reset uploaded file URL after document creation
+      uploadedFileUrl: null, // despues de que se crea porque no lo subimos a ningun lado
     })
   }
 

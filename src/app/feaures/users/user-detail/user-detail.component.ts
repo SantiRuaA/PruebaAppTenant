@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Store, Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { filter, Observable, take } from 'rxjs';
 import { LoadUser, DeleteUser } from '../../../state/user/user.actions';
 import { UserState } from '../../../state/user/user.state';
 import { User } from '../../../shared/models/user.model';
@@ -15,9 +15,8 @@ import { User } from '../../../shared/models/user.model';
   templateUrl: './user-detail.component.html',
 })
 export class UserDetailComponent implements OnInit {
-  @Select(UserState.selectedUser) user$!: Observable<User | null>;
-  @Select(UserState.loading) loading$!: Observable<boolean>;
-  @Select(UserState.error) error$!: Observable<string | null>;
+  user$: Observable<User | null>;
+  loading$: Observable<boolean>;
   
   confirmDelete = false;
 
@@ -25,10 +24,23 @@ export class UserDetailComponent implements OnInit {
     private store: Store,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    this.user$ = this.store.select(UserState.selectedUser);
+    this.loading$ = this.store.select(UserState.loading);
+  }
 
   ngOnInit(): void {
-    this.loadUser();
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!id) return;
+
+    // 3. Lógica para esperar a que los datos estén listos
+    this.store.select(UserState.users).pipe(
+      filter(users => users.length > 0), // Espera a que el array de usuarios tenga contenido
+      take(1) // Se ejecuta una sola vez y se desuscribe automáticamente
+    ).subscribe(() => {
+      // Ahora que la lista está cargada, pedimos el usuario específico.
+      this.store.dispatch(new LoadUser(id));
+    });
   }
 
   loadUser(): void {
@@ -52,7 +64,6 @@ export class UserDetailComponent implements OnInit {
 
   getRoleBadgeClass(roles: string[]): string {
     if (roles.includes('admin')) return 'bg-red-100 text-red-800';
-    if (roles.includes('manager')) return 'bg-blue-100 text-blue-800';
     return 'bg-green-100 text-green-800';
   }
 }
