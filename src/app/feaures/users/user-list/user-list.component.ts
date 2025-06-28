@@ -4,9 +4,9 @@ import { Observable } from "rxjs"
 import { LoadUsers } from "../../../state/user/user.actions"
 import { UserState, UserStateModel } from "../../../state/user/user.state"
 import { CommonModule } from "@angular/common"
-import { TenantState } from "../../../state/tenant/tenant.state"
+import { TenantState } from "../../../state/tenant/chat.state"
 import { User } from "../../../shared/models/user.model"
-import { Tenant } from "../../../shared/models/tenant.model"
+import { Tenant } from "../../../shared/models/chat.model"
 import { RouterLink } from "@angular/router"
 
 @Component({

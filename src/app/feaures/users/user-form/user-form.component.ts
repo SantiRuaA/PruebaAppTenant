@@ -7,13 +7,13 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { User } from '../../../shared/models/user.model';
-import { Tenant } from '../../../shared/models/tenant.model';
+import { Tenant } from '../../../shared/models/chat.model';
 
 import { UserState } from '../../../state/user/user.state';
 import { CreateUser, UpdateUser, LoadUser } from '../../../state/user/user.actions';
 
-import { TenantState } from '../../../state/tenant/tenant.state';
-import { LoadTenants } from '../../../state/tenant/tenant.actions';
+import { TenantState } from '../../../state/tenant/chat.state';
+import { LoadTenants } from '../../../state/tenant/chat.actions';
 
 @Component({
   selector: 'app-user-form',
@@ -91,8 +91,8 @@ export class UserFormComponent implements OnInit {
       // Creamos los FormArrays vacíos. Se llenarán dinámicamente.
       roles: this.fb.array([]),
       tenantIds: this.fb.array([]),
-      phone: [''], 
-      address: this.fb.group({ 
+      phone: [''],
+      address: this.fb.group({
         street: [''],
         city: [''],
         state: [''],
@@ -107,7 +107,7 @@ export class UserFormComponent implements OnInit {
       // ...hacemos que los campos de contraseña sean obligatorios.
       this.userForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
       this.userForm.get('confirmPassword')?.setValidators([Validators.required]);
-      
+
       // Y añadimos el validador que compara ambas contraseñas al GRUPO completo.
       this.userForm.setValidators(this.passwordMatchValidator);
     }
@@ -122,7 +122,7 @@ export class UserFormComponent implements OnInit {
     if (!password && !confirmPassword) {
       return null;
     }
-    
+
     // Devolvemos el error si no coinciden.
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
@@ -132,7 +132,7 @@ export class UserFormComponent implements OnInit {
     if (user) {
       this.userForm.patchValue(user);
     }
-    
+
     // Suscripción para poblar los checkboxes de tenants una vez que se carguen
     this.allTenants$.subscribe(allTenants => {
       if (allTenants.length > 0) {
@@ -175,7 +175,7 @@ export class UserFormComponent implements OnInit {
     const selectedTenantIds = formValue.tenantIds
       .map((checked: boolean, i: number) => checked ? allTenants[i].id : null)
       .filter((value: number | null): value is number => value !== null);
-      
+
     // Creamos el payload final
     const finalUserData: Partial<User> = {
       firstName: formValue.firstName,

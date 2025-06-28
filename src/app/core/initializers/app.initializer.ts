@@ -3,7 +3,7 @@ import { Store } from '@ngxs/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthState } from '../../state/auth/auth.state';
-import { LoadTenants } from '../../state/tenant/tenant.actions';
+import { LoadTenants } from '../../state/tenant/chat.actions';
 import { LoadUsers } from '../../state/user/user.actions';
 import { SessionRestored } from '../../state/auth/auth.actions';
 

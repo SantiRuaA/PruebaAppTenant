@@ -1,17 +1,17 @@
-import { Component,  OnInit } from "@angular/core"
-import  { ActivatedRoute, Router, RouterLink } from "@angular/router"
-import  { Store } from "@ngxs/store"
-import  { Observable } from "rxjs"
+import { Component, OnInit } from "@angular/core"
+import { ActivatedRoute, Router, RouterLink } from "@angular/router"
+import { Store } from "@ngxs/store"
+import { Observable } from "rxjs"
 import { CommonModule } from "@angular/common"
-import { LoadDocument, DeleteDocument } from "../../../state/document/document.actions"
-import { DocumentState } from "../../../state/document/document.state"
-import { TenantState } from "../../../state/tenant/tenant.state"
-import  { Document } from "../../../shared/models/document.model"
+import { LoadDocument, DeleteDocument } from "../../../state/document/message.actions"
+import { DocumentState } from "../../../state/document/message.state"
+import { TenantState } from "../../../state/tenant/chat.state"
+import { Document } from "../../../shared/models/message.model"
 
 @Component({
   selector: "app-document-detail",
   standalone: true,
-  imports: [ RouterLink, CommonModule ],
+  imports: [RouterLink, CommonModule],
   templateUrl: "./document-detail.component.html",
 })
 export class DocumentDetailComponent implements OnInit {

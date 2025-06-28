@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core"
 import { HttpClient } from "@angular/common/http"
 import { Observable, of } from "rxjs"
 import { environment } from "../../../enviroments/environment"
-import { Document } from "../../shared/models/document.model"
+import { Document } from "../../shared/models/message.model"
 import { PaginatedResponse } from "../../shared/models/paginated-response.model"
 
 @Injectable({

@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core"
-import { State, Action,  StateContext, Selector, Store } from "@ngxs/store"
+import { State, Action, StateContext, Selector, Store } from "@ngxs/store"
 import { tap, catchError, switchMap } from "rxjs/operators"
 import { forkJoin, of } from "rxjs"
 import { Navigate } from "@ngxs/router-plugin"
-import  { AuthService } from "../../core/services/auth.service"
-import  { User } from "../../shared/models/user.model"
+import { AuthService } from "../../core/services/auth.service"
+import { User } from "../../shared/models/user.model"
 import {
   Login,
   LoginSuccess,
@@ -18,6 +18,8 @@ import {
   SessionRestored,
 } from "./auth.actions"
 import { UserService } from "../../core/services/user.service"
+import { LoadTenants } from "../tenant/chat.actions"
+import { LoadUsers } from "../user/user.actions"
 
 
 export interface AuthStateModel {
@@ -46,7 +48,7 @@ export class AuthState {
     private authService: AuthService,
     private store: Store,
     private userService: UserService
-  ) {}
+  ) { }
 
   @Selector()
   static user(state: AuthStateModel): User | null {
@@ -83,15 +85,15 @@ export class AuthState {
     ctx.patchState({ loading: true, error: null });
 
     return this.authService.login(username, password).pipe(
-      tap((userFromApi: any) => { 
-        
-        const adminUserIds = [1, 2, 3, 4, 5]; 
-        
+      tap((userFromApi: any) => {
+
+        const adminUserIds = [1, 2, 3, 4, 5];
+
         let assignedRoles = ['user'];
 
         if (adminUserIds.includes(userFromApi.id)) {
 
-          assignedRoles.push('admin'); 
+          assignedRoles.push('admin');
         }
 
         const userForState: User = {
@@ -103,12 +105,12 @@ export class AuthState {
           image: userFromApi.image,
           gender: userFromApi.gender,
           token: userFromApi.accessToken,
-          
+
           roles: assignedRoles,
 
           tenantIds: [1, 2],
         };
-        
+
         ctx.dispatch(new LoginSuccess(userForState, userForState.token!));
       }),
       catchError((error) => {
@@ -129,13 +131,20 @@ export class AuthState {
       error: null,
     });
     localStorage.setItem('authToken', token);
-    if (user.tenantIds.length > 1) {
-      return ctx.dispatch(new Navigate(['/select-tenant']));
-    } else {
-      // Si solo tiene 1 o 0, lo mandamos al dashboard y el APP_INITIALIZER
-      // o el ngOnInit del dashboard se encargarán.
-      return ctx.dispatch(new Navigate(['/dashboard']));
-    }
+
+    const dataLoadingActions = [
+      new LoadTenants(),
+      new LoadUsers()
+    ]
+    return ctx.dispatch(dataLoadingActions).pipe(
+      tap(() => {
+        if (user.tenantIds.length > 1) {
+          ctx.dispatch(new Navigate(['/select-tenant']));
+        } else {
+          ctx.dispatch(new Navigate(['/dashboard']));
+        }
+      })
+    );
   }
 
   @Action(LoginFailure)
@@ -178,27 +187,27 @@ export class AuthState {
         ctx.dispatch(new RegisterSuccess(createdUser));
       }),
       catchError(error => {
-          const errorMessage = error.error?.message || "Registration failed";
-          ctx.dispatch(new RegisterFailure(errorMessage));
-          return of(error);
+        const errorMessage = error.error?.message || "Registration failed";
+        ctx.dispatch(new RegisterFailure(errorMessage));
+        return of(error);
       })
     );
   }
 
   @Action(RegisterSuccess)
   registerSuccess(ctx: StateContext<AuthStateModel>, action: RegisterSuccess) {
-      // El registro ya no inicia sesión, solo finaliza el estado de carga.
-      ctx.patchState({ loading: false, error: null });
-      // Navega al login con un mensaje de éxito
-      return ctx.dispatch(new Navigate(['/auth/login'], { success: true }));
+    // El registro ya no inicia sesión, solo finaliza el estado de carga.
+    ctx.patchState({ loading: false, error: null });
+    // Navega al login con un mensaje de éxito
+    return ctx.dispatch(new Navigate(['/auth/login'], { success: true }));
   }
 
   private enrichUser(user: User): User {
-      // Aquí aplicamos la lógica de negocio que antes estaba en el servicio
-      const enrichedUser = { ...user };
-      enrichedUser.roles = (user.id % 2 === 0) ? ['admin', 'user'] : ['user'];
-      enrichedUser.tenantIds = [1, 2]; // Simulación
-      return enrichedUser;
+    // Aquí aplicamos la lógica de negocio que antes estaba en el servicio
+    const enrichedUser = { ...user };
+    enrichedUser.roles = (user.id % 2 === 0) ? ['admin', 'user'] : ['user'];
+    enrichedUser.tenantIds = [1, 2]; // Simulación
+    return enrichedUser;
   }
 
   @Action(RegisterFailure)

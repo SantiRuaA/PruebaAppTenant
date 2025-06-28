@@ -4,10 +4,10 @@ import { ActivatedRoute, Router, RouterLink } from "@angular/router"
 import { Store } from "@ngxs/store"
 import { Observable } from "rxjs"
 import { CommonModule } from "@angular/common"
-import { LoadDocument, CreateDocument, UpdateDocument } from "../../../state/document/document.actions"
-import { DocumentState } from "../../../state/document/document.state"
+import { LoadDocument, CreateDocument, UpdateDocument } from "../../../state/document/message.actions"
+import { DocumentState } from "../../../state/document/message.state"
 import { AuthState } from "../../../state/auth/auth.state"
-import { TenantState } from "../../../state/tenant/tenant.state"
+import { TenantState } from "../../../state/tenant/chat.state"
 import { DocumentService } from "../../../core/services/document.service"
 
 @Component({

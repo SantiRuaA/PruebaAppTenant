@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core"
-import { State, Action,  StateContext, Selector } from "@ngxs/store"
+import { State, Action, StateContext, Selector } from "@ngxs/store"
 import { tap, catchError } from "rxjs/operators"
 import { of } from "rxjs"
-import  { DocumentService } from "../../core/services/document.service"
-import  { Document } from "../../shared/models/document.model"
+import { DocumentService } from "../../core/services/document.service"
+import { Document } from "../../shared/models/message.model"
 import {
   LoadDocuments,
   LoadDocumentsSuccess,
@@ -25,7 +25,7 @@ import {
   UploadFileFailure,
   SetDocumentFilters,
   ResetDocumentFilters,
-} from "./document.actions"
+} from "./message.actions"
 import { Logout } from "../auth/auth.actions"
 
 export interface DocumentStateModel {
@@ -75,7 +75,7 @@ export class DocumentState {
     loading: false,
     error: null,
   };
-  constructor(private documentService: DocumentService) {}
+  constructor(private documentService: DocumentService) { }
 
   @Selector()
   static documents(state: DocumentStateModel): Document[] {

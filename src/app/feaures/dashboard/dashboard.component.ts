@@ -3,16 +3,16 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngxs/store';
 import { map, Observable, tap } from 'rxjs';
 import { AuthState } from '../../state/auth/auth.state';
-import { TenantState } from '../../state/tenant/tenant.state';
+import { TenantState } from '../../state/tenant/chat.state';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { User } from '../../shared/models/user.model';
-import { Tenant } from '../../shared/models/tenant.model';
-import { DocumentState, DocumentStateModel } from '../../state/document/document.state';
+import { Tenant } from '../../shared/models/chat.model';
+import { DocumentState, DocumentStateModel } from '../../state/document/message.state';
 import { UserState, UserStateModel } from '../../state/user/user.state';
 import { RouterLink } from '@angular/router';
 import { LoadUsers } from '../../state/user/user.actions';
-import { LoadTenants } from '../../state/tenant/tenant.actions';
-import { LoadDocuments } from '../../state/document/document.actions';
+import { LoadTenants } from '../../state/tenant/chat.actions';
+import { LoadDocuments } from '../../state/document/message.actions';
 
 @Component({
   selector: 'app-dashboard',

@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core"
-import { State, Action,  StateContext, Selector, Store } from "@ngxs/store"
+import { State, Action, StateContext, Selector, Store } from "@ngxs/store"
 import { tap, catchError, switchMap } from "rxjs/operators"
 import { of } from "rxjs"
-import  { TenantService } from "../../core/services/tenant.service"
-import  { Tenant } from "../../shared/models/tenant.model"
+import { TenantService } from "../../core/services/tenant.service"
+import { Tenant } from "../../shared/models/chat.model"
 import { AuthState } from "../auth/auth.state"
 import {
   LoadTenants,
@@ -14,8 +14,8 @@ import {
   UpdateTenant,
   DeleteTenant,
   LoadTenant,
-} from "./tenant.actions"
-import { LoadDocuments } from "../document/document.actions"
+} from "./chat.actions"
+import { LoadDocuments } from "../document/message.actions"
 import { Navigate } from "@ngxs/router-plugin"
 import { Logout } from "../auth/auth.actions"
 
@@ -47,7 +47,7 @@ export class TenantState {
     error: null,
   };
 
-  constructor(private tenantService: TenantService, private store: Store) {}
+  constructor(private tenantService: TenantService, private store: Store) { }
 
   @Selector()
   static tenants(state: TenantStateModel): Tenant[] {
@@ -118,9 +118,9 @@ export class TenantState {
 
   @Action(LoadTenantsSuccess)
   loadTenantsSuccess(ctx: StateContext<TenantStateModel>, action: LoadTenantsSuccess) {
-    const allTenants = action.tenants; 
+    const allTenants = action.tenants;
     const user = this.store.selectSnapshot(AuthState.user);
-    
+
     let tenantsForUser: Tenant[];
     // Si el array de roles del usuario incluye 'admin'...
     if (user && user.roles.includes('admin')) {

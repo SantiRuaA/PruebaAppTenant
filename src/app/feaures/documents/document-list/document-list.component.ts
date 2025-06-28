@@ -1,13 +1,13 @@
 import { Component, OnInit } from "@angular/core"
 import { Store } from "@ngxs/store"
 import { Observable } from "rxjs"
-import { LoadDocuments, SetDocumentFilters, ResetDocumentFilters } from "../../../state/document/document.actions"
+import { LoadDocuments, SetDocumentFilters, ResetDocumentFilters } from "../../../state/document/message.actions"
 import { RouterLink } from "@angular/router"
 import { CommonModule } from "@angular/common"
-import { DocumentState } from "../../../state/document/document.state"
-import { TenantState } from "../../../state/tenant/tenant.state"
-import { Document } from "../../../shared/models/document.model"
-import { Tenant } from "../../../shared/models/tenant.model"
+import { DocumentState } from "../../../state/document/message.state"
+import { TenantState } from "../../../state/tenant/chat.state"
+import { Document } from "../../../shared/models/message.model"
+import { Tenant } from "../../../shared/models/chat.model"
 
 @Component({
   selector: "app-document-list",

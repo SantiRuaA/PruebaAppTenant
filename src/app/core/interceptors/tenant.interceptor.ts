@@ -1,7 +1,7 @@
-import  { HttpInterceptorFn } from "@angular/common/http"
+import { HttpInterceptorFn } from "@angular/common/http"
 import { inject } from "@angular/core"
 import { Store } from "@ngxs/store"
-import { TenantState } from "../../state/tenant/tenant.state"
+import { TenantState } from "../../state/tenant/chat.state"
 
 export const tenantInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(Store)

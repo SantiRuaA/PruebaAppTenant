@@ -3,23 +3,23 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store, Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { filter, take } from 'rxjs/operators'; 
-import { CommonModule } from '@angular/common'; 
-import { LoadTenant, CreateTenant, UpdateTenant } from '../../../state/tenant/tenant.actions';
-import { TenantState } from '../../../state/tenant/tenant.state';
-import { Tenant } from '../../../shared/models/tenant.model';
+import { filter, take } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { LoadTenant, CreateTenant, UpdateTenant } from '../../../state/tenant/chat.actions';
+import { TenantState } from '../../../state/tenant/chat.state';
+import { Tenant } from '../../../shared/models/chat.model';
 
 @Component({
   selector: 'app-tenant-form',
-  standalone: true, 
-  imports: [CommonModule, ReactiveFormsModule, RouterLink], 
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './tentant-form.component.html',
 })
 export class TenantFormComponent implements OnInit {
   tenantForm!: FormGroup;
   isEditMode = false;
   tenantId: number | null = null;
-  
+
   @Select(TenantState.loading) loading$!: Observable<boolean>;
   @Select(TenantState.error) error$!: Observable<string | null>;
 
@@ -28,7 +28,7 @@ export class TenantFormComponent implements OnInit {
     private store: Store,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -53,9 +53,9 @@ export class TenantFormComponent implements OnInit {
 
     // Nos suscribimos al selector para rellenar el formulario UNA SOLA VEZ
     this.store.select(TenantState.selectedTenant).pipe(
-        filter((tenant): tenant is Tenant => tenant !== null && tenant.id === id), // Nos aseguramos de que no sea nulo y sea el correcto
-        take(1) // Tomamos el primer valor y nos desuscribimos automáticamente
-      )
+      filter((tenant): tenant is Tenant => tenant !== null && tenant.id === id), // Nos aseguramos de que no sea nulo y sea el correcto
+      take(1) // Tomamos el primer valor y nos desuscribimos automáticamente
+    )
       .subscribe((tenant) => {
         this.tenantForm.patchValue(tenant);
       });

@@ -1,8 +1,8 @@
 import { inject } from "@angular/core"
-import { Router,  CanActivateFn } from "@angular/router"
+import { Router, CanActivateFn } from "@angular/router"
 import { Store } from "@ngxs/store"
 import { map } from "rxjs"
-import { TenantState } from "../../state/tenant/tenant.state"
+import { TenantState } from "../../state/tenant/chat.state"
 
 export const tenantGuard: CanActivateFn = (route, state) => {
   const store = inject(Store)
@@ -15,7 +15,7 @@ export const tenantGuard: CanActivateFn = (route, state) => {
       }
 
       // manda a seleccionar tenant
-      return router.createUrlTree(["/select-tenant"])
+      return router.createUrlTree(["/tenants/new"])
     }),
   )
 }

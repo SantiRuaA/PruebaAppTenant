@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
-import { RouterLink } from '@angular/router';  
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Store, Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { LoadTenants, DeleteTenant } from '../../../state/tenant/tenant.actions';
-import { TenantState } from '../../../state/tenant/tenant.state';
-import { AuthState } from '../../../state/auth/auth.state'; 
-import { Tenant } from '../../../shared/models/tenant.model';
+import { LoadTenants, DeleteTenant } from '../../../state/tenant/chat.actions';
+import { TenantState } from '../../../state/tenant/chat.state';
+import { AuthState } from '../../../state/auth/auth.state';
+import { Tenant } from '../../../shared/models/chat.model';
 
 @Component({
   selector: 'app-tenant-list',
-  standalone: true, 
-  imports: [CommonModule, RouterLink], 
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './tenant-list.component.html',
 })
 export class TenantListComponent implements OnInit {

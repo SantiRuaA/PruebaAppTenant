@@ -1,4 +1,4 @@
-import  { Routes } from "@angular/router"
+import { Routes } from "@angular/router"
 import { authGuard } from "./core/guards/auth.guard"
 import { roleGuard } from "./core/guards/role.guard"
 import { tenantGuard } from "./core/guards/tenant.guard"
@@ -13,11 +13,6 @@ export const routes: Routes = [
   {
     path: "auth",
     loadChildren: () => import("./auth/auth.routes").then((m) => m.AUTH_ROUTES),
-  },
-  {
-    path: 'select-tenant',
-    canActivate: [authGuard], // Solo necesita que el usuario esté logueado
-    loadComponent: () => import('./feaures/tenants/tenant-select/tenant-select.component').then(m => m.TenantSelectComponent)
   },
   {
     path: "",
