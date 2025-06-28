@@ -177,33 +177,6 @@
             </div>
           </div>
         </div>
-
-        <div class="sm:col-span-6 border-t border-gray-200 pt-6 mt-4">
-          <label class="block text-sm font-medium text-gray-700">Asignacion de tenants</label>
-          <p class="text-sm text-gray-500">Selecciona los tenants a los que podra acceder la persona.</p>
-          <div class="mt-2 space-y-2 border border-gray-200 rounded-md p-4" formArrayName="tenantIds">
-            <div *ngIf="(allTenants$ | async) === null">Cargando tenants...</div>
-            <div 
-              *ngFor="let tenant of allTenants$ | async; let i = index"
-              class="relative flex items-start"
-            >
-              <div class="flex h-5 items-center">
-                <input 
-                  [id]="'tenant-' + i" 
-                  type="checkbox" 
-                  [formControlName]="i"
-                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-              </div>
-              <div class="ml-3 text-sm">
-                <label [for]="'tenant-' + i" class="font-medium text-gray-700">
-                  {{ tenant.name }}
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- Submit  -->
         <div class="flex justify-end">
           <button 

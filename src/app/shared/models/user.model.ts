@@ -9,6 +9,6 @@ export interface User {
 
   // --- Campos que añadimos nosotros y que no vienen de la API ---
   token?: string;      
-  roles: string[];     
-  tenantIds: number[]; 
+  roles: string[];
+  chatIds: number[];     
 }

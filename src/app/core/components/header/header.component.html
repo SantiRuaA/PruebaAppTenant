@@ -1,9 +1,9 @@
 <header class="bg-white shadow-sm z-10">
   <div class="flex justify-between items-center px-4 py-3">
 
-    <div *ngIf="currentTenant$ | async as tenant" class="flex items-center">
+    <div *ngIf="currentChat$ | async as chat" class="flex items-center">
       <span class="material-icons text-gray-500 mr-2">chat</span>
-      <span class="font-medium text-gray-700">Tenant: {{ tenant.name }}</span>
+      <span class="font-medium text-gray-700">Tenant: {{ chat.name }}</span>
     </div>
 
     <ng-container *ngIf="user$ | async as user">

@@ -1,19 +1,19 @@
 <div class="container mx-auto px-4 py-6">
   <div class="flex justify-between items-center mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Tenants</h1>
-      <p class="text-gray-600">Administra los tenant</p>
+      <h1 class="text-2xl font-bold text-gray-900">Chats</h1>
+      <p class="text-gray-600">Administra los chats</p>
     </div>
-    <a routerLink="/tenants/new" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+    <a routerLink="/chats/new" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
       <span class="material-icons mr-2 text-sm"></span>
-      nuevo Tenant
+      nuevo Chat
     </a>
   </div>
 
-  <!-- lista de Tenant -->
+  <!-- lista de Chats -->
   <ng-container *ngIf="!(loading$ | async)">
-    <ng-container *ngIf="tenants$ | async as tenants">
-      <div *ngIf="tenants.length > 0" class="bg-white rounded-lg shadow overflow-hidden">
+    <ng-container *ngIf="chats$ | async as chats">
+      <div *ngIf="chats.length > 0" class="bg-white rounded-lg shadow overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -23,25 +23,25 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngFor="let tenant of tenants" class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm font-medium text-gray-900">{{ tenant.name }}</div></td>
-              <td class="px-6 py-4"><div class="text-sm text-gray-900">{{ tenant.description || 'No description' }}</div></td>
+            <tr *ngFor="let chat of chats" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm font-medium text-gray-900">{{ chat.name }}</div></td>
+              <td class="px-6 py-4"><div class="text-sm text-gray-900">{{ chat.description || 'No description' }}</div></td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <a [routerLink]="['/tenants', tenant.id, 'edit']" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
-                <button (click)="confirmDelete = tenant.id" class="text-red-600 hover:text-red-900">Borrar</button>
+                <a [routerLink]="['/chats', chat.id, 'edit']" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
+                <button (click)="confirmDelete = chat.id" class="text-red-600 hover:text-red-900">Borrar</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div *ngIf="(tenants$ | async)?.length === 0 && !(loading$ | async)" class="bg-white rounded-lg shadow-sm p-8 text-center mt-4">
-        <span class="material-icons text-gray-400 text-5xl mb-4">Tenants</span>
-        <h3 class="text-lg font-medium text-gray-900 mb-1">No se encontraron tenants</h3>
-        <p class="text-gray-500 mb-4">Empieza creando un nuevo tenant.</p>
-        <a routerLink="/tenants/new" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <div *ngIf="(chats$ | async)?.length === 0 && !(loading$ | async)" class="bg-white rounded-lg shadow-sm p-8 text-center mt-4">
+        <span class="material-icons text-gray-400 text-5xl mb-4">Chats</span>
+        <h3 class="text-lg font-medium text-gray-900 mb-1">No se encontraron chats</h3>
+        <p class="text-gray-500 mb-4">Empieza creando un nuevo chat.</p>
+        <a routerLink="/chats/new" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <span class="material-icons mr-2 text-sm">añadir</span>
-          Nuevo Tenant
+          Nuevo Chat
         </a>
       </div>
     </ng-container>
@@ -69,11 +69,11 @@
             </div>
             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
               <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                Eliminar Tenant
+                Eliminar Chat
               </h3>
               <div class="mt-2">
                 <p class="text-sm text-gray-500">
-                  Estas seguro de eliminar el tenant?
+                  Estas seguro de eliminar el chat?
                 </p>
               </div>
             </div>

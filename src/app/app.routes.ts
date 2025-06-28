@@ -26,7 +26,7 @@ export const routes: Routes = [
       },
       {
         path: "documents",
-        loadChildren: () => import("./feaures/documents/document.routes").then((m) => m.DOCUMENTS_ROUTES),
+        loadChildren: () => import("./feaures/documents/message.routes").then((m) => m.DOCUMENTS_ROUTES),
         canActivate: [authGuard, tenantGuard],
       },
       {
@@ -41,8 +41,8 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
-        path: "tenants",
-        loadChildren: () => import("./feaures/tenants/tenants.routes").then((m) => m.TENANTS_ROUTES),
+        path: "chats",
+        loadChildren: () => import("./feaures/chats/chats.routes").then((m) => m.TENANTS_ROUTES),
         canActivate: [authGuard, roleGuard],
         data: { roles: ["admin"] },
       },

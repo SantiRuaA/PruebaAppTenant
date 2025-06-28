@@ -10,8 +10,8 @@ import { routes } from "./app.routes"
 import { authInterceptor } from "./core/interceptors/auth.interceptor"
 import { AuthState } from "./state/auth/auth.state"
 import { UserState } from "./state/user/user.state"
-import { TenantState } from "./state/tenant/chat.state"
-import { DocumentState } from "./state/document/message.state"
+import { ChatState } from "./state/chat/chat.state"
+import { MessageState } from "./state/message/message.state"
 import { environment } from "../enviroments/environment"
 import { initializeApplication } from "./core/initializers/app.initializer"
 
@@ -26,7 +26,7 @@ export const appConfig: ApplicationConfig = {
       multi: true,
     },
     importProvidersFrom(
-      NgxsModule.forRoot([AuthState, UserState, TenantState, DocumentState], {
+      NgxsModule.forRoot([AuthState, UserState, ChatState, MessageState], {
         developmentMode: !environment.production,
       }),
       NgxsStoragePluginModule.forRoot({

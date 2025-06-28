@@ -7,13 +7,12 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { User } from '../../../shared/models/user.model';
-import { Tenant } from '../../../shared/models/chat.model';
 
 import { UserState } from '../../../state/user/user.state';
 import { CreateUser, UpdateUser, LoadUser } from '../../../state/user/user.actions';
 
-import { TenantState } from '../../../state/tenant/chat.state';
-import { LoadTenants } from '../../../state/tenant/chat.actions';
+import { TenantState } from '../../../state/chat/chat.state';
+import { LoadTenants } from '../../../state/chat/chat.actions';
 
 @Component({
   selector: 'app-user-form',
@@ -29,8 +28,6 @@ export class UserFormComponent implements OnInit {
   // Observables para el estado de carga y errores
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
-  // Observable para la lista completa de tenants
-  allTenants$: Observable<Tenant[]>;
 
   // Lista de roles disponibles para mostrar en el formulario
   availableRoles = ['admin', 'user'];
@@ -44,7 +41,6 @@ export class UserFormComponent implements OnInit {
     // Inicializamos los observables desde el store
     this.loading$ = this.store.select(UserState.loading);
     this.error$ = this.store.select(UserState.error);
-    this.allTenants$ = this.store.select(TenantState.tenants);
   }
 
   // Helpers para acceder fácilmente a los FormArrays desde el template
@@ -133,17 +129,6 @@ export class UserFormComponent implements OnInit {
       this.userForm.patchValue(user);
     }
 
-    // Suscripción para poblar los checkboxes de tenants una vez que se carguen
-    this.allTenants$.subscribe(allTenants => {
-      if (allTenants.length > 0) {
-        this.tenantsFormArray.clear();
-        allTenants.forEach(tenant => {
-          const isChecked = user?.tenantIds?.includes(tenant.id) ?? false;
-          this.tenantsFormArray.push(this.fb.control(isChecked));
-        });
-      }
-    });
-
     // Poblamos los checkboxes de roles
     this.rolesFormArray.clear();
     this.availableRoles.forEach(role => {
@@ -160,7 +145,6 @@ export class UserFormComponent implements OnInit {
 
     const currentTenant = this.store.selectSnapshot(TenantState.currentTenant);
     if (!currentTenant) {
-      // Idealmente, aquí muestras un error al usuario
       console.error("No hay un tenant seleccionado para realizar la operación.");
       return;
     }
@@ -172,9 +156,6 @@ export class UserFormComponent implements OnInit {
       .filter((value: string | null): value is string => value !== null);
 
     const allTenants = this.store.selectSnapshot(TenantState.tenants);
-    const selectedTenantIds = formValue.tenantIds
-      .map((checked: boolean, i: number) => checked ? allTenants[i].id : null)
-      .filter((value: number | null): value is number => value !== null);
 
     // Creamos el payload final
     const finalUserData: Partial<User> = {
@@ -183,20 +164,17 @@ export class UserFormComponent implements OnInit {
       email: formValue.email,
       username: formValue.username,
       roles: selectedRoles,
-      tenantIds: selectedTenantIds,
     };
 
     if (this.isEditMode && this.userId) {
-      // Update existing user
-      // --- CORRECCIÓN AQUÍ ---
+      // Update user
       // Ahora pasamos los 3 argumentos que la acción espera: id, tenantId, y los datos.
       this.store.dispatch(new UpdateUser(this.userId, finalUserData))
         .subscribe(() => {
           this.router.navigate(['/users']);
         });
     } else {
-      // Create new user
-      // La llamada a CreateUser ya estaba bien.
+      // Create nuevo user
       this.store.dispatch(new CreateUser(finalUserData, formValue.password))
         .subscribe(() => {
           this.router.navigate(['/users']);

@@ -4,11 +4,11 @@ import { RouterLink } from '@angular/router';
 import { Store, Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AuthState } from '../../../state/auth/auth.state';
-import { TenantState } from '../../../state/tenant/chat.state';
+import { ChatState } from '../../../state/chat/chat.state';
 import { Logout } from '../../../state/auth/auth.actions';
-import { ChangeTenant, LoadTenants } from '../../../state/tenant/chat.actions';
+import { SelectChat, LoadChats } from '../../../state/chat/chat.actions';
 import { User } from '../../../shared/models/user.model';
-import { Tenant } from '../../../shared/models/chat.model';
+import { Chat } from '../../../shared/models/chat.model';
 
 @Component({
   selector: 'app-header',
@@ -19,13 +19,13 @@ import { Tenant } from '../../../shared/models/chat.model';
 export class HeaderComponent {
   // --- Selectors para obtener datos reactivos del store ---
   user$: Observable<User | null>;
-  currentTenant$: Observable<Tenant | null>;
+  currentChat$: Observable<Chat | null>;
 
   isDropdownOpen = false;
 
   constructor(private store: Store) {
     this.user$ = this.store.select(AuthState.user);
-    this.currentTenant$ = this.store.select(TenantState.currentTenant);
+    this.currentChat$ = this.store.select(ChatState.currentChat);
   }
 
   toggleDropdown(): void {

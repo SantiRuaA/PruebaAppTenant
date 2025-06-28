@@ -6,10 +6,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AuthState } from '../../../state/auth/auth.state';
-import { TenantState } from '../../../state/tenant/chat.state';
+import { ChatState } from '../../../state/chat/chat.state';
 import { User } from '../../../shared/models/user.model';
 import { Chat } from '../../../shared/models/chat.model';
-import { ChangeTenant } from '../../../state/tenant/chat.actions';
+import { SelectChat } from '../../../state/chat/chat.actions';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit {
 
   // --- Observables que se conectan al estado de NGXS ---
   isAdmin$: Observable<boolean>;
-  chats$: Observable<Chat[]>; // Aunque se llama Tenant, sabemos que son nuestros Chats
+  chats$: Observable<Chat[]>;
   currentChatId$: Observable<number | null>;
 
   constructor(private store: Store) {
@@ -33,9 +33,9 @@ export class SidebarComponent implements OnInit {
       map(user => user?.roles.includes('admin') ?? false)
     );
 
-    this.chats$ = this.store.select(TenantState.tenants);
+    this.chats$ = this.store.select(ChatState.chats);
 
-    this.currentChatId$ = this.store.select(TenantState.currentTenantId);
+    this.currentChatId$ = this.store.select(ChatState.currentChatId);
   }
 
   ngOnInit(): void {
@@ -44,8 +44,8 @@ export class SidebarComponent implements OnInit {
   }
 
   // Método para cambiar el chat activo al hacer clic en la lista
-  selectChat(tenantId: number): void {
-    this.store.dispatch(new ChangeTenant(tenantId));
+  selectChat(chatId: number): void {
+    this.store.dispatch(new SelectChat(chatId));
     // Si estamos en móvil, cerramos el menú después de seleccionar
     if (this.isMobileMenuOpen) {
       this.toggleMobileMenu();

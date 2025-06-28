@@ -68,7 +68,7 @@ export class RegisterComponent implements OnInit {
         username,
         email,
         roles: ["user"],
-        tenantIds: [1], // Tenant por defecto
+        chatIds: [1], // Tenant por defecto
       }),
     )
   }

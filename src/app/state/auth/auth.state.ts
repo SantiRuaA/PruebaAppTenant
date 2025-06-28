@@ -18,7 +18,7 @@ import {
   SessionRestored,
 } from "./auth.actions"
 import { UserService } from "../../core/services/user.service"
-import { LoadTenants } from "../tenant/chat.actions"
+import { LoadTenants } from "../chat/chat.actions"
 import { LoadUsers } from "../user/user.actions"
 
 

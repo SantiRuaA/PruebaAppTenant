@@ -1,7 +1,8 @@
 export interface Message {
   id: number;
   chatId: number;
-  userId: number;
-  content: string;
+  content: string; 
+  sender: 'user' | 'bot'; 
   createdAt: Date;
+  userId: number;
 }
