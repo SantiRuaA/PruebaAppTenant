@@ -11,8 +11,8 @@ import { User } from '../../../shared/models/user.model';
 import { UserState } from '../../../state/user/user.state';
 import { CreateUser, UpdateUser, LoadUser } from '../../../state/user/user.actions';
 
-import { TenantState } from '../../../state/chat/chat.state';
-import { LoadTenants } from '../../../state/chat/chat.actions';
+import { ChatState } from '../../../state/chat/chat.state';
+import { LoadChats } from '../../../state/chat/chat.actions';
 
 @Component({
   selector: 'app-user-form',
@@ -48,13 +48,13 @@ export class UserFormComponent implements OnInit {
     return this.userForm.get('roles') as FormArray;
   }
 
-  get tenantsFormArray() {
-    return this.userForm.get('tenantIds') as FormArray;
+  get chatsFormArray() {
+    return this.userForm.get('chatIds') as FormArray;
   }
 
   ngOnInit(): void {
-    // Al iniciar, pedimos la lista de todos los tenants para poder mostrarlos
-    this.store.dispatch(new LoadTenants());
+    // Al iniciar, pedimos la lista de todos lo chats para poder mostrarlos
+    this.store.dispatch(new LoadChats());
     this.initializeForm();
 
     // Verificamos si estamos en modo edición
@@ -86,7 +86,7 @@ export class UserFormComponent implements OnInit {
       username: ['', Validators.required],
       // Creamos los FormArrays vacíos. Se llenarán dinámicamente.
       roles: this.fb.array([]),
-      tenantIds: this.fb.array([]),
+      chatIds: this.fb.array([]),
       phone: [''],
       address: this.fb.group({
         street: [''],
@@ -143,9 +143,9 @@ export class UserFormComponent implements OnInit {
       return;
     }
 
-    const currentTenant = this.store.selectSnapshot(TenantState.currentTenant);
-    if (!currentTenant) {
-      console.error("No hay un tenant seleccionado para realizar la operación.");
+    const currentChat = this.store.selectSnapshot(ChatState.currentChat);
+    if (!currentChat) {
+      console.error("No hay un chat seleccionado para realizar la operación.");
       return;
     }
     const formValue = this.userForm.value;
@@ -155,7 +155,7 @@ export class UserFormComponent implements OnInit {
       .map((checked: boolean, i: number) => checked ? this.availableRoles[i] : null)
       .filter((value: string | null): value is string => value !== null);
 
-    const allTenants = this.store.selectSnapshot(TenantState.tenants);
+    const allChats = this.store.selectSnapshot(ChatState.chats);
 
     // Creamos el payload final
     const finalUserData: Partial<User> = {
@@ -168,7 +168,7 @@ export class UserFormComponent implements OnInit {
 
     if (this.isEditMode && this.userId) {
       // Update user
-      // Ahora pasamos los 3 argumentos que la acción espera: id, tenantId, y los datos.
+      // Ahora pasamos los 3 argumentos que la acción espera: id, chatId, y los datos.
       this.store.dispatch(new UpdateUser(this.userId, finalUserData))
         .subscribe(() => {
           this.router.navigate(['/users']);

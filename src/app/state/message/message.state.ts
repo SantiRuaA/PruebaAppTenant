@@ -114,31 +114,25 @@ export class MessageState {
 
   @Action(LoadMessages)
   loadMessages(ctx: StateContext<MessageStateModel>, action: LoadMessages) {
-    ctx.patchState({ loading: true, error: null })
-    return this.messageService
-      .getMessages(action.chatId, action.page, action.limit, action.search, action.tags)
-      .pipe(
-        tap((response) => {
-          ctx.dispatch(new LoadMessagesSuccess(response))
-        }),
-        catchError((error) => {
-          ctx.dispatch(new LoadMessagesFailure(error.message || "Failed to load Message"))
-          return of(error)
-        }),
-      )
+    ctx.patchState({ loading: true, error: null });
+    // Llamada al servicio simplificada, solo con chatId
+    return this.messageService.getMessages(action.chatId).pipe(
+      tap((response: Message[]) => {
+        ctx.dispatch(new LoadMessagesSuccess(response));
+      }),
+      catchError((error) => {
+        ctx.dispatch(new LoadMessagesFailure(error.message || "Failed to load Messages"));
+        return of(error);
+      })
+    );
   }
 
   @Action(LoadMessagesSuccess)
   loadMessagesSuccess(ctx: StateContext<MessageStateModel>, action: LoadMessagesSuccess) {
     ctx.patchState({
-      messages: action.response.items,
-      pagination: {
-        total: action.response.total,
-        page: action.response.page,
-        limit: action.response.limit,
-      },
+      messages: action.messages,
       loading: false,
-    })
+    });
   }
 
   @Action(LoadMessagesFailure)
@@ -220,13 +214,26 @@ export class MessageState {
 
   @Action(CreateMessageSuccess)
   createMessageSuccess(ctx: StateContext<MessageStateModel>, action: CreateMessageSuccess) {
-    const state = ctx.getState()
+    const state = ctx.getState();
+    const newMessage = action.message; 
+
     ctx.patchState({
-      messages: [...state.messages, action.message],
-      selectedMessage: action.message,
-      loading: false,
-      uploadedFileUrl: null, // despues de que se crea porque no lo subimos a ningun lado
-    })
+      messages: [...state.messages, newMessage],
+    });
+
+    if (newMessage.sender === 'user') {
+      
+      setTimeout(() => {
+        const botResponsePayload: Partial<Message> = {
+          chatId: newMessage.chatId,
+          userId: 99, // Un ID genérico para el bot
+          sender: 'bot',
+          content: `He recibido tu mensaje: "${newMessage.content}". Estoy procesando tu solicitud.`
+        };
+        ctx.dispatch(new CreateMessage(botResponsePayload));
+
+      }, 1500);
+    }
   }
 
   @Action(CreateMessageFailure)

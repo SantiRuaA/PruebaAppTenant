@@ -82,12 +82,17 @@ export class ChatState {
 
   @Action(LoadChats)
   loadChats(ctx: StateContext<ChatStateModel>) {
+    const user = this.store.selectSnapshot(AuthState.user);
+
+    if (!user) {
+      return of(null);
+    }
+    
     ctx.patchState({ loading: true, error: null });
-    return this.chatService.getAllChats().pipe(
-      switchMap((allChats) => {
-        // Esto despacha la acción de éxito y devuelve el observable resultante,
-        // forzando a la cadena original a esperar a que esta segunda acción termine.
-        return ctx.dispatch(new LoadChatsSuccess(allChats));
+    
+    return this.chatService.getChats(user.id).pipe(
+      switchMap((chatsDelUsuario) => {
+        return ctx.dispatch(new LoadChatsSuccess(chatsDelUsuario));
       }),
       catchError((error) => {
         return ctx.dispatch(new LoadChatsFailure(error.message || "Fallo en cargar los chats"));
@@ -118,26 +123,19 @@ export class ChatState {
 
   @Action(LoadChatsSuccess)
   loadChatsSuccess(ctx: StateContext<ChatStateModel>, action: LoadChatsSuccess) {
-    const allChats = action.chats;
-    const user = this.store.selectSnapshot(AuthState.user);
+    const chatsForUser = action.chats;
 
-    let chatsForUser: Chat[];
-    // Si el array de roles del usuario incluye 'admin'...
-    if (user && user.roles.includes('admin')) {
-      // ...le asignamos la lista COMPLETA de chats.
-      chatsForUser = allChats;
-    } else {
-      const allowedChatIds = user?.chatIds || [];
-      chatsForUser = allChats.filter(chat => allowedChatIds.includes(chat.id));
-    }
-
-    const currentChatId = ctx.getState().currentChatId || (chatsForUser.length > 0 ? chatsForUser[0].id : null);
+    const newCurrentChatId = ctx.getState().currentChatId || (chatsForUser.length > 0 ? chatsForUser[0].id : null);
 
     ctx.patchState({
-      chats: chatsForUser, // Guardamos la lista correcta (completa o filtrada)
+      chats: chatsForUser,
       loading: false,
-      currentChatId: currentChatId,
+      currentChatId: newCurrentChatId,
     });
+
+    if (newCurrentChatId) {
+      ctx.dispatch(new LoadMessages(newCurrentChatId));
+    }
   }
 
   @Action(LoadChatsFailure)

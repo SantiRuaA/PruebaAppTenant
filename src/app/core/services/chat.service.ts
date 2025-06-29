@@ -14,14 +14,16 @@ export class ChatService {
   private mockChats: Chat[] = [
     { id: 1, userId: 1, name: 'Ideas para el viaje', lastMessageAt: new Date() },
     { id: 2, userId: 1, name: 'Receta de sancocho', lastMessageAt: new Date() },
-    { id: 3, userId: 23, name: 'Como Comprar BitCoin Barato', lastMessageAt: new Date() },
+    { id: 3, userId: 12, name: 'Como Comprar BitCoin Barato', lastMessageAt: new Date() },
   ]
 
   constructor(private http: HttpClient) { }
 
-  getChats(): Observable<Chat[]> {
-    // // En una app real esto es una llamada a la api
-    return of([...this.mockChats])
+  getChats(userId: number): Observable<Chat[]> {
+    
+    // En una app real, la API haría este filtro. Aquí lo simulamos.
+    const userChats = this.mockChats.filter(chat => chat.userId === userId);
+    return of([...userChats]);
   }
 
   getChat(id: number): Observable<Chat> {
@@ -35,6 +37,10 @@ export class ChatService {
 
   getAllChats(): Observable<Chat[]> {
     return of([...this.mockChats]);
+  }
+
+  public getMockChats(): Chat[] {
+    return this.mockChats;
   }
 
   createChat(chatData: Partial<Chat>): Observable<Chat> {

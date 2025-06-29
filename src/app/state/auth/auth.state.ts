@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core"
 import { State, Action, StateContext, Selector, Store } from "@ngxs/store"
-import { tap, catchError, switchMap } from "rxjs/operators"
-import { forkJoin, of } from "rxjs"
+import { tap, catchError } from "rxjs/operators"
 import { Navigate } from "@ngxs/router-plugin"
 import { AuthService } from "../../core/services/auth.service"
 import { User } from "../../shared/models/user.model"
@@ -18,8 +17,10 @@ import {
   SessionRestored,
 } from "./auth.actions"
 import { UserService } from "../../core/services/user.service"
-import { LoadTenants } from "../chat/chat.actions"
+import { LoadChats } from "../chat/chat.actions"
 import { LoadUsers } from "../user/user.actions"
+import { of } from "rxjs"
+import { ChatState } from "../chat/chat.state"
 
 
 export interface AuthStateModel {
@@ -108,7 +109,7 @@ export class AuthState {
 
           roles: assignedRoles,
 
-          tenantIds: [1, 2],
+          chatIds: [1, 2],
         };
 
         ctx.dispatch(new LoginSuccess(userForState, userForState.token!));
@@ -123,6 +124,7 @@ export class AuthState {
 
   @Action(LoginSuccess)
   loginSuccess(ctx: StateContext<AuthStateModel>, { user, token }: LoginSuccess) {
+
     ctx.patchState({
       user,
       token,
@@ -130,19 +132,13 @@ export class AuthState {
       loading: false,
       error: null,
     });
-    localStorage.setItem('authToken', token);
-
-    const dataLoadingActions = [
-      new LoadTenants(),
+    return ctx.dispatch([
+      new LoadChats(),
       new LoadUsers()
-    ]
-    return ctx.dispatch(dataLoadingActions).pipe(
+    ]).pipe(
       tap(() => {
-        if (user.tenantIds.length > 1) {
-          ctx.dispatch(new Navigate(['/select-tenant']));
-        } else {
-          ctx.dispatch(new Navigate(['/dashboard']));
-        }
+        console.log("[AuthState] Login y carga de datos exitosos. Navegando al dashboard.");
+        ctx.dispatch(new Navigate(['/dashboard']));
       })
     );
   }
@@ -206,7 +202,7 @@ export class AuthState {
     // Aquí aplicamos la lógica de negocio que antes estaba en el servicio
     const enrichedUser = { ...user };
     enrichedUser.roles = (user.id % 2 === 0) ? ['admin', 'user'] : ['user'];
-    enrichedUser.tenantIds = [1, 2]; // Simulación
+    enrichedUser.chatIds = [1, 2]; // Simulación
     return enrichedUser;
   }
 

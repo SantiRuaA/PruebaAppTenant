@@ -4,9 +4,9 @@ import { Observable } from "rxjs"
 import { LoadUsers } from "../../../state/user/user.actions"
 import { UserState, UserStateModel } from "../../../state/user/user.state"
 import { CommonModule } from "@angular/common"
-import { TenantState } from "../../../state/chat/chat.state"
+import { ChatState } from "../../../state/chat/chat.state"
 import { User } from "../../../shared/models/user.model"
-import { Tenant } from "../../../shared/models/chat.model"
+import { Chat } from "../../../shared/models/chat.model"
 import { RouterLink } from "@angular/router"
 
 @Component({
@@ -20,7 +20,7 @@ export class UserListComponent implements OnInit {
   users$: Observable<User[]>
   loading$: Observable<boolean>
   error$: Observable<string | null>
-  currentTenant$: Observable<Tenant | null>
+  currentChat$: Observable<Chat | null>
   pagination$!: Observable<UserStateModel['pagination']>
   readonly Math: typeof Math = Math;
 
@@ -28,7 +28,7 @@ export class UserListComponent implements OnInit {
     this.users$ = this.store.select(UserState.users)
     this.loading$ = this.store.select(UserState.loading)
     this.error$ = this.store.select(UserState.error)
-    this.currentTenant$ = this.store.select(TenantState.currentTenant)
+    this.currentChat$ = this.store.select(ChatState.currentChat)
     this.pagination$ = this.store.select(UserState.pagination);
   }
 

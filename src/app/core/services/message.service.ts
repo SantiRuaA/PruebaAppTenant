@@ -16,7 +16,7 @@ export class MessageService {
     { id: 1, chatId: 1, sender: 'user', content: 'Parce, ¿y si vamos a Santa Marta?', createdAt: new Date(), userId: 1 },
     { id: 2, chatId: 1, sender: 'bot', content: '¡De una! Es un gran destino.', createdAt: new Date(), userId: 99 }, // 99 para el bot
     { id: 3, chatId: 2, sender: 'user', content: '¿Qué ingredientes necesito para el sancocho?', createdAt: new Date(), userId: 1 },
-    { id: 4, chatId: 3, sender: 'user', content: '¿Como comprar BitCoin Barato?', createdAt: new Date(), userId: 23 },
+    { id: 4, chatId: 3, sender: 'user', content: '¿Como comprar BitCoin Barato?', createdAt: new Date(), userId: 12 },
   ];
 
   constructor(private http: HttpClient) { }

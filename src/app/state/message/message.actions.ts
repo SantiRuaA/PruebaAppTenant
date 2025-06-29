@@ -2,19 +2,13 @@ import { Message } from "../../shared/models/message.model"
 import { PaginatedResponse } from "../../shared/models/paginated-response.model"
 
 export class LoadMessages {
-  static readonly type = "[Message] Load Message"
-  constructor(
-    public chatId: number,
-    public page = 0,
-    public limit = 10,
-    public search?: string,
-    public tags?: string[],
-  ) { }
+  static readonly type = "[Message] Load Messages";
+  constructor(public chatId: number) {}
 }
 
 export class LoadMessagesSuccess {
-  static readonly type = "[Message] Load Message Success"
-  constructor(public response: PaginatedResponse<Message>) { }
+  static readonly type = "[Message] Load Messages Success";
+  constructor(public messages: Message[]) {}
 }
 
 export class LoadMessagesFailure {

@@ -7,7 +7,6 @@ import { map } from 'rxjs/operators';
 
 import { AuthState } from '../../../state/auth/auth.state';
 import { ChatState } from '../../../state/chat/chat.state';
-import { User } from '../../../shared/models/user.model';
 import { Chat } from '../../../shared/models/chat.model';
 import { SelectChat } from '../../../state/chat/chat.actions';
 
@@ -39,14 +38,9 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // La carga inicial de datos ya la maneja el APP_INITIALIZER y el Login,
-    // así que el ngOnInit de la sidebar puede quedar limpio.
   }
-
-  // Método para cambiar el chat activo al hacer clic en la lista
   selectChat(chatId: number): void {
     this.store.dispatch(new SelectChat(chatId));
-    // Si estamos en móvil, cerramos el menú después de seleccionar
     if (this.isMobileMenuOpen) {
       this.toggleMobileMenu();
     }

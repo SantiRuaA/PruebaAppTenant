@@ -5,6 +5,8 @@ import { map } from "rxjs/operators"
 import { environment } from "../../../enviroments/environment"
 import { User } from "../../shared/models/user.model"
 import { PaginatedResponse } from "../../shared/models/paginated-response.model"
+import { Chat } from '../../shared/models/chat.model';
+import { ChatService } from './chat.service';
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +16,7 @@ export class UserService {
 
   // Nuestra "base de datos" simulada
   private mockUsers: User[] = [];
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private chatService: ChatService) { }
 
   getUsers(page = 0, limit = 10): Observable<PaginatedResponse<User>> {
     // Creamos la cabecera explícita que sí funciona
@@ -40,8 +42,6 @@ export class UserService {
     if (userFromMock) {
       return of({ ...userFromMock });
     }
-
-    // --- SOLUCIÓN: FORZAMOS LA CABECERA 'Accept' ---
     const headers = new HttpHeaders({
       'Accept': 'application/json'
     });
@@ -87,12 +87,15 @@ export class UserService {
     return this.http.delete<any>(`${this.apiUrl}/users/${id}`).pipe(map((response) => response.isDeleted || true))
   }
 
-  private mapDummyJsonUser(userData: any): User {
-    const adminUserIds = [1, 2, 3, 4, 5]; // IDs que serán admin
-    let assignedRoles = ['user'];
-    if (adminUserIds.includes(userData.id)) {
-      assignedRoles.push('admin');
-    }
+  public mapDummyJsonUser(userData: any): User {
+    const adminUserIds = [1, 2, 3, 4, 5];
+    const assignedRoles = adminUserIds.includes(userData.id) ? ['user', 'admin'] : ['user'];
+    
+    const allChats = this.chatService.getMockChats(); 
+    
+    const userChatIds = allChats
+      .filter(chat => chat.userId === userData.id)
+      .map(chat => chat.id);
 
     return {
       id: userData.id,
@@ -102,10 +105,8 @@ export class UserService {
       lastName: userData.lastName,
       image: userData.image,
       gender: userData.gender,
-
       roles: assignedRoles,
-
-      tenantIds: [1, 2],
+      chatIds: userChatIds,
     };
   }
 }
