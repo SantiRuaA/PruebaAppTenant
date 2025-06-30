@@ -13,7 +13,6 @@ import {
   CreateChat,
   UpdateChat,
   DeleteChat,
-  LoadChat,
   LoadAllChats,
   LoadAllChatsSuccess,
   LoadAllChatsFailure,
@@ -104,20 +103,21 @@ export class ChatState {
 
   @Action(LoadChatsSuccess)
   loadChatsSuccess(ctx: StateContext<ChatStateModel>, action: LoadChatsSuccess) {
-    const receivedChats = action.chats;
-    const currentChatId = ctx.getState().currentChatId || (receivedChats.length > 0 ? receivedChats[0].id : null);
-    
-    ctx.patchState({
-      chats: receivedChats,
-      loading: false,
-      currentChatId: currentChatId,
-    });
+    const chatsForUser = action.chats;
 
-    if (currentChatId) {
-      ctx.dispatch(new LoadMessages(currentChatId));
+    const newCurrentChatId = ctx.getState().currentChatId || (chatsForUser.length > 0 ? chatsForUser[0].id : null);
+
+    ctx.patchState({
+      chats: chatsForUser,
+      loading: false,
+      currentChatId: newCurrentChatId,
+    });
+    if (newCurrentChatId) {
+      return ctx.dispatch(new LoadMessages(newCurrentChatId));
     }
+    return;
   }
-  
+
   @Action(LoadChatsFailure)
   loadChatFailure(ctx: StateContext<ChatStateModel>, action: LoadChatsFailure) {
     ctx.patchState({

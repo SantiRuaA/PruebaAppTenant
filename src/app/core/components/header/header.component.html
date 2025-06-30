@@ -3,7 +3,7 @@
 
     <div *ngIf="currentChat$ | async as chat" class="flex items-center">
       <span class="material-icons text-gray-500 mr-2">chat</span>
-      <span class="font-medium text-gray-700">Tenant: {{ chat.name }}</span>
+      <span class="font-medium text-gray-700">Chat: {{ chat.name }}</span>
     </div>
 
     <ng-container *ngIf="user$ | async as user">

@@ -16,12 +16,12 @@ export class LoadAllChats {
 
 export class LoadAllChatsSuccess {
   static readonly type = "[Chat] Load All Chats Success";
-  constructor(public chats: Chat[]) {}
+  constructor(public chats: Chat[]) { }
 }
 
 export class LoadAllChatsFailure {
   static readonly type = "[Chat] Load All Chats Failure";
-  constructor(public error: string) {}
+  constructor(public error: string) { }
 }
 
 export class LoadChatsSuccess {

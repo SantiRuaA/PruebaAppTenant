@@ -41,28 +41,22 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     this.messageForm = this.fb.group({
       content: ['', Validators.required]
     });
-    
+
     // Inicializamos la suscripción a la ruta
     this.routeSubscription = new Subscription();
   }
 
   ngOnInit(): void {
-    // Escuchamos los cambios en los parámetros de la URL.
-    // Esto es robusto: funciona tanto al cargar la página por primera vez
-    // como al cambiar de chat desde la sidebar sin recargar la página.
     this.routeSubscription = this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.currentChatId = +id;
-        console.log(`[ChatView] Detectado cambio de chat. Cargando mensajes para el chat ID: ${this.currentChatId}`);
-        // Despachamos la acción para cargar TODOS los mensajes de este chat
         this.store.dispatch(new LoadMessages(this.currentChatId));
       }
     });
   }
 
   ngOnDestroy(): void {
-    // Buena práctica: nos desuscribimos para evitar fugas de memoria
     this.routeSubscription.unsubscribe();
   }
 

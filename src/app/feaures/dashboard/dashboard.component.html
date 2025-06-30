@@ -17,10 +17,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <h3 class="font-medium text-blue-700">Mensajes (en este chat)</h3>
-          <p class="text-2xl font-bold">{{ (messagePagination$ | async)?.total || 0 }}</p>
-        </div>
 
         <div *ngIf="isAdmin$ | async" class="bg-green-50 p-4 rounded-lg border border-green-200">
           <h3 class="font-medium text-green-700">Usuarios (Total)</h3>
@@ -28,8 +24,13 @@
         </div>
 
         <div *ngIf="isAdmin$ | async" class="bg-purple-50 p-4 rounded-lg border border-purple-200">
-          <h3 class="font-medium text-purple-700">Conversaciones (Total)</h3>
+          <h3 class="font-medium text-purple-700">Mis chats</h3>
           <p class="text-2xl font-bold">{{ (chats$ | async)?.length || 0 }}</p>
+        </div>
+
+        <div *ngIf="isAdmin$ | async" class="bg-purple-50 p-4 rounded-lg border border-blue-200">
+          <h3 class="font-medium text-blue-700">Todos los chats</h3>
+          <p class="text-2xl font-bold">{{ (allChats$ | async)?.length || 0 }}</p>
         </div>
       </div>
 
@@ -46,13 +47,13 @@
           <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" routerLink="/chats/new">
             Crear Nuevo Chat
           </button>
-          
+
           <button *ngIf="isAdmin$ | async" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
-            routerLink="/users">
+            routerLink="/admin/users">
             Gestionar Usuarios
           </button>
           <button *ngIf="isAdmin$ | async" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
-            routerLink="/chats">
+            routerLink="/admin/chats">
             Gestionar Todos los Chats
           </button>
         </div>

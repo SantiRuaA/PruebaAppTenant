@@ -20,9 +20,9 @@ import { Chat } from '../../shared/models/chat.model';
 export class DashboardComponent {
   user$: Observable<User | null>;
   currentChat$: Observable<Chat | null>;
-  messagePagination$: Observable<MessageStateModel['pagination']>;
   userPagination$: Observable<UserStateModel['pagination']>;
   chats$: Observable<Chat[]>;
+  allChats$: Observable<Chat[]>
   isLoading$: Observable<boolean>;
   isAdmin$: Observable<boolean>;
 
@@ -39,13 +39,13 @@ export class DashboardComponent {
     ]).pipe(
       map(([auth, user, chat, message]) => auth || user || chat || message)
     );
-    
+
     // El resto de las inicializaciones que ya estaban bien
     this.user$ = this.store.select(AuthState.user);
     this.currentChat$ = this.store.select(ChatState.currentChat);
-    this.messagePagination$ = this.store.select(MessageState.pagination);
     this.userPagination$ = this.store.select(UserState.pagination);
     this.chats$ = this.store.select(ChatState.chats);
+    this.allChats$ = this.store.select(ChatState.allChats)
     this.isAdmin$ = this.user$.pipe(
       map(user => user?.roles.includes('admin') ?? false)
     );

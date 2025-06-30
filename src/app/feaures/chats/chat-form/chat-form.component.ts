@@ -71,13 +71,11 @@ export class ChatFormComponent implements OnInit {
     if (this.isEditMode && this.chatId) {
       this.store.dispatch(new UpdateChat(this.chatId, formData))
         .subscribe(() => {
-          this.router.navigate(['/chats']);
+          this.router.navigate(['/chats', this.chatId]);
         });
     } else {
-      this.store.dispatch(new CreateChat(formData))
-        .subscribe(() => {
-          this.router.navigate(['/chats']);
-        });
+      this.store.dispatch(new CreateChat(formData));
     }
+
   }
 }

@@ -137,7 +137,6 @@ export class AuthState {
       new LoadUsers()
     ]).pipe(
       tap(() => {
-        console.log("[AuthState] Login y carga de datos exitosos. Navegando al dashboard.");
         ctx.dispatch(new Navigate(['/dashboard']));
       })
     );
