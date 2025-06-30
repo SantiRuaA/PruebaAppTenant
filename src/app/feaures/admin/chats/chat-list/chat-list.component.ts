@@ -4,11 +4,11 @@ import { RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UserState } from '../../../state/user/user.state'; 
-import { ChatState } from '../../../state/chat/chat.state';
-import { Chat } from '../../../shared/models/chat.model';
-import { LoadChats, DeleteChat } from '../../../state/chat/chat.actions';
-import { LoadUsers } from '../../../state/user/user.actions'; 
+import { UserState } from '../../../../state/user/user.state'; 
+import { ChatState } from '../../../../state/chat/chat.state';
+import { Chat } from '../../../../shared/models/chat.model';
+import { LoadChats, DeleteChat, LoadAllChats } from '../../../../state/chat/chat.actions';
+import { LoadUsers } from '../../../../state/user/user.actions'; 
 
 export interface EnrichedChat extends Chat {
   userName: string;
@@ -27,7 +27,7 @@ export class ChatListComponent implements OnInit {
   confirmDelete: number | null = null;
 
   constructor(private store: Store) {
-    const chats$ = this.store.select(ChatState.chats);
+    const chats$ = this.store.select(ChatState.allChats);
     const users$ = this.store.select(UserState.users);
 
     this.enrichedChats$ = combineLatest([chats$, users$]).pipe(
@@ -49,9 +49,10 @@ export class ChatListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch([
-      new LoadChats(),
-      new LoadUsers()
+      new LoadUsers(0, 0),
+      new LoadAllChats()
     ]);
+
   }
 
   onDelete(chatId: number): void {

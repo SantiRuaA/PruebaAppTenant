@@ -1,12 +1,12 @@
 import { Component, OnInit } from "@angular/core"
 import { Store } from "@ngxs/store"
 import { Observable } from "rxjs"
-import { LoadUsers } from "../../../state/user/user.actions"
-import { UserState, UserStateModel } from "../../../state/user/user.state"
+import { LoadUsers } from "../../../../state/user/user.actions"
+import { UserState, UserStateModel } from "../../../../state/user/user.state"
 import { CommonModule } from "@angular/common"
-import { ChatState } from "../../../state/chat/chat.state"
-import { User } from "../../../shared/models/user.model"
-import { Chat } from "../../../shared/models/chat.model"
+import { ChatState } from "../../../../state/chat/chat.state"
+import { User } from "../../../../shared/models/user.model"
+import { Chat } from "../../../../shared/models/chat.model"
 import { RouterLink } from "@angular/router"
 
 @Component({

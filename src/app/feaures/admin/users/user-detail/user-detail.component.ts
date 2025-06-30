@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { Router, RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { Store, Select } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { filter, Observable, take } from 'rxjs';
-import { LoadUser, DeleteUser } from '../../../state/user/user.actions';
-import { UserState } from '../../../state/user/user.state';
-import { User } from '../../../shared/models/user.model';
+import { LoadUser, DeleteUser } from '../../../../state/user/user.actions';
+import { UserState } from '../../../../state/user/user.state';
+import { User } from '../../../../shared/models/user.model';
 
 @Component({
   selector: 'app-user-detail',

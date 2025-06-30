@@ -6,13 +6,13 @@ import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { User } from '../../../shared/models/user.model';
+import { User } from '../../../../shared/models/user.model';
 
-import { UserState } from '../../../state/user/user.state';
-import { CreateUser, UpdateUser, LoadUser } from '../../../state/user/user.actions';
+import { UserState } from '../../../../state/user/user.state';
+import { CreateUser, UpdateUser, LoadUser } from '../../../../state/user/user.actions';
 
-import { ChatState } from '../../../state/chat/chat.state';
-import { LoadChats } from '../../../state/chat/chat.actions';
+import { ChatState } from '../../../../state/chat/chat.state';
+import { LoadChats } from '../../../../state/chat/chat.actions';
 
 @Component({
   selector: 'app-user-form',

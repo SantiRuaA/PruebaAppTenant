@@ -26,11 +26,28 @@
                 <span class="material-icons mr-3">add_comment</span>
                 Nuevo Chat
             </a>
-            <div class="max-h-60 overflow-y-auto">
-              <a *ngFor="let chat of chats$ | async" [routerLink]="['/chats', chat.id]" (click)="selectChat(chat.id)" [class.bg-gray-100]="(currentChatId$ | async) === chat.id" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" [title]="chat.name">
-                <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                <span class="truncate">{{ chat.name }}</span>
-              </a>
+            <div *ngIf="chats$ | async as chats" class="max-h-60 overflow-y-auto mt-2 space-y-1">
+    
+              <ng-container *ngIf="chats.length > 0; else emptyStateTemplate">
+                <a *ngFor="let chat of chats" 
+                  [routerLink]="['/chats', chat.id]" 
+                  (click)="selectChat(chat.id)"
+                  routerLinkActive="bg-gray-100 text-gray-900"
+                  class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                  [title]="chat.name">
+                  <span class="material-icons mr-3 text-gray-400">chat_bubble_outline</span>
+                  <span class="truncate">{{ chat.name }}</span>
+                </a>
+              </ng-container>
+
+              <ng-template #emptyStateTemplate>
+                <div class="px-3 py-4 text-center text-sm text-gray-400">
+                  <span class="material-icons text-4xl">add</span>
+                  <p class="mt-2 font-semibold">Crea tu primer chat</p>
+                  <p class="text-xs">Usa el botón "Nuevo Chat" para comenzar.</p>
+                </div>
+              </ng-template>
+
             </div>
           </div>
 
@@ -38,11 +55,11 @@
             <hr class="mx-2 my-2 border-gray-200">
             <ng-container *ngIf="isAdmin$ | async">
                 <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Administración</p>
-                <a routerLink="/users" routerLinkActive="bg-gray-100 text-gray-900" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900">
+                <a routerLink="/admin/users" routerLinkActive="bg-gray-100 text-gray-900" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900">
                     <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                     Usuarios
                 </a>
-                <a routerLink="/chats" routerLinkActive="bg-gray-100 text-gray-900" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900">
+                <a routerLink="/admin/chats" routerLinkActive="bg-gray-100 text-gray-900" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900">
                     <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                     Gestionar Chats
                 </a>
@@ -81,7 +98,7 @@
             <a routerLink="/chats/new" (click)="toggleMobileMenu()" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700">
                 <span class="material-icons mr-3">add_comment</span>Nuevo Chat
             </a>
-            <a *ngFor="let chat of chats$ | async" [routerLink]="['/chats', chat.id]" (click)="selectChat(chat.id); toggleMobileMenu()" [class.bg-gray-100]="(currentChatId$ | async) === chat.id" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 cursor-pointer">
+            <a *ngFor="let chat of chats$ | async" [routerLink]="['/admin/chats', chat.id]" (click)="selectChat(chat.id); toggleMobileMenu()" [class.bg-gray-100]="(currentChatId$ | async) === chat.id" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 cursor-pointer">
                 <span class="material-icons mr-3">chat_bubble_outline</span>
                 <span class="truncate">{{ chat.name }}</span>
             </a>
@@ -89,10 +106,10 @@
         <ng-container *ngIf="isAdmin$ | async">
           <div class="mt-4 space-y-1">
             <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Administración</p>
-            <a routerLink="/users" (click)="toggleMobileMenu()" routerLinkActive="bg-gray-100 text-gray-900" class="group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900">
+            <a routerLink="/admin/users" (click)="toggleMobileMenu()" routerLinkActive="bg-gray-100 text-gray-900" class="group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900">
               <span class="material-icons mr-4">group</span>Usuarios
             </a>
-            <a routerLink="/chats/" (click)="toggleMobileMenu()" routerLinkActive="bg-gray-100 text-gray-900" class="group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900">
+            <a routerLink="/admin/chats" (click)="toggleMobileMenu()" routerLinkActive="bg-gray-100 text-gray-900" class="group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900">
               <span class="material-icons mr-4">all_inbox</span>Gestionar Chats
             </a>
           </div>

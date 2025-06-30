@@ -14,13 +14,16 @@ import {
   UpdateChat,
   DeleteChat,
   LoadChat,
+  LoadAllChats,
+  LoadAllChatsSuccess,
+  LoadAllChatsFailure,
 } from "./chat.actions"
 import { LoadMessages } from "../message/message.actions"
-import { Navigate } from "@ngxs/router-plugin"
 import { Logout } from "../auth/auth.actions"
 
 export interface ChatStateModel {
   chats: Chat[]
+  allChats: Chat[]
   currentChatId: number | null
   selectedChat: Chat | null
   loading: boolean
@@ -31,6 +34,7 @@ export interface ChatStateModel {
   name: "chat",
   defaults: {
     chats: [],
+    allChats: [],
     currentChatId: null,
     selectedChat: null,
     loading: false,
@@ -41,6 +45,7 @@ export interface ChatStateModel {
 export class ChatState {
   private static readonly DEFAULTS = {
     chats: [],
+    allChats: [],
     currentChatId: null,
     selectedChat: null,
     loading: false,
@@ -52,6 +57,11 @@ export class ChatState {
   @Selector()
   static chats(state: ChatStateModel): Chat[] {
     return state.chats
+  }
+
+  @Selector()
+  static allChats(state: ChatStateModel): Chat[] {
+    return state.allChats;
   }
 
   @Selector()
@@ -81,69 +91,64 @@ export class ChatState {
   }
 
   @Action(LoadChats)
-  loadChats(ctx: StateContext<ChatStateModel>) {
+  loadUserChats(ctx: StateContext<ChatStateModel>) {
     const user = this.store.selectSnapshot(AuthState.user);
+    if (!user) return of(null);
 
-    if (!user) {
-      return of(null);
-    }
-    
     ctx.patchState({ loading: true, error: null });
-    
     return this.chatService.getChats(user.id).pipe(
-      switchMap((chatsDelUsuario) => {
-        return ctx.dispatch(new LoadChatsSuccess(chatsDelUsuario));
-      }),
-      catchError((error) => {
-        return ctx.dispatch(new LoadChatsFailure(error.message || "Fallo en cargar los chats"));
-      })
-    );
-  }
-
-  @Action(LoadChat)
-  loadChat(ctx: StateContext<ChatStateModel>, action: LoadChat) {
-    ctx.patchState({ loading: true, error: null });
-
-    return this.chatService.getChat(action.id).pipe(
-      tap((chat) => {
-        ctx.patchState({
-          selectedChat: chat,
-          loading: false,
-        });
-      }),
-      catchError((error) => {
-        ctx.patchState({
-          loading: false,
-          error: error.message || "Fallo en cargar los chats",
-        });
-        return of(error);
-      })
+      tap((userChats) => ctx.dispatch(new LoadChatsSuccess(userChats))),
+      catchError((error) => ctx.dispatch(new LoadChatsFailure(error.message)))
     );
   }
 
   @Action(LoadChatsSuccess)
   loadChatsSuccess(ctx: StateContext<ChatStateModel>, action: LoadChatsSuccess) {
-    const chatsForUser = action.chats;
-
-    const newCurrentChatId = ctx.getState().currentChatId || (chatsForUser.length > 0 ? chatsForUser[0].id : null);
-
+    const receivedChats = action.chats;
+    const currentChatId = ctx.getState().currentChatId || (receivedChats.length > 0 ? receivedChats[0].id : null);
+    
     ctx.patchState({
-      chats: chatsForUser,
+      chats: receivedChats,
       loading: false,
-      currentChatId: newCurrentChatId,
+      currentChatId: currentChatId,
     });
 
-    if (newCurrentChatId) {
-      ctx.dispatch(new LoadMessages(newCurrentChatId));
+    if (currentChatId) {
+      ctx.dispatch(new LoadMessages(currentChatId));
     }
   }
-
+  
   @Action(LoadChatsFailure)
   loadChatFailure(ctx: StateContext<ChatStateModel>, action: LoadChatsFailure) {
     ctx.patchState({
       loading: false,
       error: action.error,
     })
+  }
+
+  @Action(LoadAllChats)
+  loadAllChats(ctx: StateContext<ChatStateModel>) {
+    ctx.patchState({ loading: true, error: null });
+    return this.chatService.getAllChats().pipe(
+      tap((allChats) => ctx.dispatch(new LoadAllChatsSuccess(allChats))),
+      catchError((error) => ctx.dispatch(new LoadAllChatsFailure(error.message)))
+    );
+  }
+
+  @Action(LoadAllChatsSuccess)
+  loadAllChatsSuccess(ctx: StateContext<ChatStateModel>, action: LoadAllChatsSuccess) {
+    ctx.patchState({
+      allChats: action.chats,
+      loading: false,
+    });
+  }
+
+  @Action(LoadAllChatsFailure)
+  loadAllChatsFailure(ctx: StateContext<ChatStateModel>, action: LoadAllChatsFailure) {
+    ctx.patchState({
+      loading: false,
+      error: action.error,
+    });
   }
 
   @Action(SelectChat)

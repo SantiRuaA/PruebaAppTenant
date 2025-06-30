@@ -48,8 +48,8 @@ export class ChatFormComponent implements OnInit {
   }
 
   loadChatForEditing(id: number): void {
-    // Despachamos la acción para cargar el tenant en el estado
-    this.store.dispatch(new LoadChat(id));
+    // Despachamos la acción para cargar el chat en el estado
+    this.store.dispatch(new LoadChat());
 
     // Nos suscribimos al selector para rellenar el formulario UNA SOLA VEZ
     this.store.select(ChatState.selectedChat).pipe(

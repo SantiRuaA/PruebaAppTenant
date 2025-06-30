@@ -7,7 +7,21 @@ export class LoadChats {
 
 export class LoadChat {
   static readonly type = "[Chat] Load Chat";
-  constructor(public id: number) { }
+  constructor() { }
+}
+
+export class LoadAllChats {
+  static readonly type = "[Chat] Load All Chats";
+}
+
+export class LoadAllChatsSuccess {
+  static readonly type = "[Chat] Load All Chats Success";
+  constructor(public chats: Chat[]) {}
+}
+
+export class LoadAllChatsFailure {
+  static readonly type = "[Chat] Load All Chats Failure";
+  constructor(public error: string) {}
 }
 
 export class LoadChatsSuccess {
