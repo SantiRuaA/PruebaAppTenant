@@ -38,8 +38,7 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "prerender": {
-              "discoverRoutes": false,
-              "routesFile": "routes.txt"
+              "routesFile": "src/routes.txt"
             },
             "ssr": {
               "entry": "src/server.ts"
@@ -47,6 +46,7 @@
           },
           "configurations": {
             "production": {
+              "prerender": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -62,6 +62,7 @@
               "outputHashing": "all"
             },
             "development": {
+              "prerender": false,
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true

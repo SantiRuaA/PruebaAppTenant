@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngxs/store';
 import { combineLatest, map, Observable } from 'rxjs';
@@ -10,6 +10,8 @@ import { UserState, UserStateModel } from '../../state/user/user.state';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { User } from '../../shared/models/user.model';
 import { Chat } from '../../shared/models/chat.model';
+import { LoadUsers } from '../../state/user/user.actions';
+import { LoadAllChats } from '../../state/chat/chat.actions';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +19,7 @@ import { Chat } from '../../shared/models/chat.model';
   imports: [CommonModule, LoadingSpinnerComponent, RouterLink],
   templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   user$: Observable<User | null>;
   currentChat$: Observable<Chat | null>;
   userPagination$: Observable<UserStateModel['pagination']>;
@@ -49,5 +51,16 @@ export class DashboardComponent {
     this.isAdmin$ = this.user$.pipe(
       map(user => user?.roles.includes('admin') ?? false)
     );
+  }
+
+  ngOnInit(): void {
+    this.isAdmin$.subscribe(isAdmin => {
+      if (isAdmin) {
+        this.store.dispatch([
+          new LoadUsers(0, 0),
+          new LoadAllChats()
+        ]);
+      }
+    });
   }
 }
